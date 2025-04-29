@@ -12,88 +12,66 @@ import jakarta.persistence.PrePersist;
 @Entity
 public class Employee extends ResultDTO {
 	@Id
-	@UuidGenerator
+	private String id;
+
 	@Column
-    private String id;
+	private String firstName;
 
-    @Column
-    private String firstName;
+	@Column
+	private String middleName;
 
-    @Column
-    private String middleName;
-    
-    @Column
-    private String lastName;
+	@Column
+	private String lastName;
 
-    @Column(length = 10)
-    private String mobile;
+	@Column(length = 10)
+	private String mobile;
 
-    @PrePersist
-    protected void generateIdIfMissing() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID().toString();
-        }
-    }
-    
+	@PrePersist
+	protected void generateIdIfMissing() {
+		if (this.id == null) {
+			this.id = UUID.randomUUID().toString();
+		}
+	}
+
 	public String getId() {
 		return id;
 	}
-
-
 
 	public void setId(String id) {
 		this.id = id;
 	}
 
-
-
 	public String getFirstName() {
 		return firstName;
 	}
-
-
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-
-
 	public String getMiddleName() {
 		return middleName;
 	}
-
-
 
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
 
-
-
 	public String getLastName() {
 		return lastName;
 	}
-
-
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-
-
 	public String getMobile() {
 		return mobile;
 	}
 
-
-
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-
 
 	public void update(Employee employee) {
 		this.firstName = employee.getFirstName();
@@ -101,13 +79,12 @@ public class Employee extends ResultDTO {
 		this.lastName = employee.getLastName();
 		this.mobile = employee.getMobile();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
 				+ lastName + ", mobile=" + mobile + "]";
-		
+
 	}
-    
 
 }

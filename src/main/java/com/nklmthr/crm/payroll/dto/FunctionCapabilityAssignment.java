@@ -14,10 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class FunctionCapabilityAssignment  extends ResultDTO {
+public class FunctionCapabilityAssignment extends ResultDTO {
+
 	@Id
-	@UuidGenerator
-	@Column
 	private String id;
 
 	@Column

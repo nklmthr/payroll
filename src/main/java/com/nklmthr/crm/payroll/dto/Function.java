@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -12,28 +14,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class Function  extends ResultDTO {
+public class Function extends ResultDTO {
 	@Id
-	@UuidGenerator
+	private String id;
+
 	@Column
-    private String id;
+	private String name;
 
-    @Column
-    private String name;
-    
-    @OneToMany(mappedBy = "function")
-    private List<FunctionCapability> functionCapabilities;
+	@OneToMany(mappedBy = "function")
+	@JsonIgnore
+	private List<FunctionCapability> functionCapabilities;
 
-    @PrePersist
-    protected void generateIdIfMissing() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID().toString();
-        }
-    }
-    
+	@PrePersist
+	protected void generateIdIfMissing() {
+		if (this.id == null) {
+			this.id = UUID.randomUUID().toString();
+		}
+	}
+
 	public void update(Function function) {
 		this.name = function.getName();
-		
+
 	}
 
 	public String getId() {
@@ -58,6 +59,6 @@ public class Function  extends ResultDTO {
 
 	public void setFunctionCapabilities(List<FunctionCapability> functionCapabilities) {
 		this.functionCapabilities = functionCapabilities;
-	} 
+	}
 
 }

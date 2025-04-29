@@ -14,4 +14,6 @@ public interface FunctionCapabilityAssignmentRepository extends JpaRepository<Fu
 	@Query("SELECT fca FROM FunctionCapabilityAssignment fca WHERE fca.functionCapability.id = :functionCapabilityId")
 	List<FunctionCapabilityAssignment> findAssignmentsByFunctionCapability(String functionCapabilityId);
 
+	
+
 }

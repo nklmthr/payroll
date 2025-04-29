@@ -124,9 +124,9 @@ public class RestAPIService {
 		return ResponseEntity.ok(resultEntity);
 	}
 
-	@GetMapping("/function/{id}")
-	public ResponseEntity<ResultEntity> getFunctionById(@PathVariable(name = "id") String id) {
-		Optional<Function> function = functionRepository.findById(id);
+	@GetMapping("/function/{functionId}")
+	public ResponseEntity<ResultEntity> getFunctionById(@PathVariable(name = "functionId") String functionId) {
+		Optional<Function> function = functionRepository.findById(functionId);
 		ResultEntity resultEntity = new ResultEntity();
 
 		if (function.isPresent()) {
@@ -137,20 +137,20 @@ public class RestAPIService {
 			return ResponseEntity.ok(resultEntity);
 		}
 		resultEntity.setCount(0L);
-		resultEntity.setErrors(List.of("Function not found for id:" + id));
+		resultEntity.setErrors(List.of("Function not found for id:" + functionId));
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
 	@PostMapping("/function")
 	public ResponseEntity<ResultEntity> saveFunction(@RequestBody List<Function> functionList) {
 		ResultEntity resultEntity = new ResultEntity();
-		functionRepository.saveAll(functionList);
-		List<ResultDTO> resultList = new ArrayList<>(functionList.size());
-		resultEntity.setCount((long) functionList.size());
-		resultList.addAll(functionList);
+		List<Function> result = functionRepository.saveAll(functionList);
+		List<ResultDTO> resultList = new ArrayList<>(result.size());
+		resultEntity.setCount((long) result.size());
+		resultList.addAll(result);
 		resultEntity.setResult(resultList);
 		return ResponseEntity.ok(resultEntity);
-		
+
 	}
 
 	@PutMapping("/function")
@@ -170,7 +170,7 @@ public class RestAPIService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@GetMapping("/function/{functionId}/capability")
+	@GetMapping("/function/{functionId}/function-capability")
 	public ResponseEntity<ResultEntity> getFunctionCapabilities(@PathVariable(name = "functionId") String functionId) {
 		ResultEntity resultEntity = new ResultEntity();
 		Optional<Function> function = functionRepository.findById(functionId);
@@ -191,21 +191,31 @@ public class RestAPIService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@PostMapping("/function/{id}/capability")
-	public ResponseEntity<FunctionCapability> saveFunctionCapability(@PathVariable(name = "id") String id,
+	@PostMapping("/function/{functionId}/function-capability")
+	public ResponseEntity<ResultEntity> saveFunctionCapability(@PathVariable(name = "functionId") String functionId,
 			@RequestBody FunctionCapability functionCapability) {
-		Optional<Function> function = functionRepository.findById(id);
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<Function> function = functionRepository.findById(functionId);
 		if (function.isPresent()) {
 			functionCapability.setFunction(function.get());
-			return ResponseEntity.ok(functionCapabilityRepository.save(functionCapability));
+			functionCapabilityRepository.save(functionCapability);
+			List<ResultDTO> functionCapabilityList = new ArrayList<>(1);
+			functionCapabilityList.add(functionCapability);
+			resultEntity.setCount((long) functionCapabilityList.size());
+			resultEntity.setResult(functionCapabilityList);
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function not found for id:" + functionId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+
 	}
 
-	@PutMapping("/function/{id}/capability")
-	public ResponseEntity<FunctionCapability> updateFunctionCapability(@PathVariable(name = "id") String id,
+	@PutMapping("/function/{functionId}/function-capability")
+	public ResponseEntity<ResultEntity> updateFunctionCapability(@PathVariable(name = "functionId") String functionId,
 			@RequestBody FunctionCapability functionCapability) {
-		Optional<Function> function = functionRepository.findById(id);
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<Function> function = functionRepository.findById(functionId);
 		if (function.isPresent()) {
 			Optional<FunctionCapability> funcCapability = functionCapabilityRepository
 					.findById(functionCapability.getId());
@@ -213,117 +223,196 @@ public class RestAPIService {
 				FunctionCapability funcCapability1 = funcCapability.get();
 				funcCapability1.update(functionCapability);
 				functionCapabilityRepository.save(funcCapability1);
-				return ResponseEntity.ok(funcCapability1);
+				List<ResultDTO> functionCapabilityList = new ArrayList<>(1);
+				functionCapabilityList.add(funcCapability1);
+				resultEntity.setCount((long) functionCapabilityList.size());
+				resultEntity.setResult(functionCapabilityList);
+				return ResponseEntity.ok(resultEntity);
 			} else {
-				// return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FunctionCapability
-				// not found for Function:"+id+", FunctionCapability id provided
-				// is:"+functionCapability.getId());
+				resultEntity.setCount(0L);
+				resultEntity.setErrors(List.of("FunctionCapability not found for Function:" + functionId
+						+ ", FunctionCapability id provided is:" + functionCapability.getId()));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 			}
 		}
-		// return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Function not found
-		// for id:"+id);
-		return null;
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function not found for id:" + functionId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@GetMapping("/function/{id}/capability/{capId}")
-	public ResponseEntity<FunctionCapability> getFunctionCapabilityById(@PathVariable(name = "id") String id,
+	@GetMapping("/function/{functionId}/function-capability/{capId}")
+	public ResponseEntity<ResultEntity> getFunctionCapabilityById(@PathVariable(name = "functionId") String functionId,
 			@PathVariable(name = "capId") String capId) {
-		Optional<FunctionCapability> functionCapability = functionCapabilityRepository.findById(capId);
-		if (functionCapability.isPresent()) {
-			return ResponseEntity.ok(functionCapability.get());
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<Function> function = functionRepository.findById(functionId);
+		if (function.isPresent()) {
+			Optional<FunctionCapability> functionCapability = functionCapabilityRepository.findById(capId);
+			if (functionCapability.isPresent()) {
+
+				List<ResultDTO> functionCapabilityList = new ArrayList<>(1);
+				functionCapabilityList.add(functionCapability.get());
+				resultEntity.setCount((long) functionCapabilityList.size());
+				resultEntity.setResult(functionCapabilityList);
+				return ResponseEntity.ok(resultEntity);
+			} else {
+				resultEntity.setCount(0L);
+				resultEntity.setErrors(List.of("Function Capability not found for capId:" + capId));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+			}
+
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function Capability not found for functionId:" + functionId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@GetMapping("/function/{id}/capability/{capId}/employee")
-	public ResponseEntity<List<FunctionCapabilityAssignment>> getFunctionCapabilityAssignmentsByEmployee(
-			@PathVariable(name = "id") String id, @PathVariable(name = "capId") String capId) {
-		Optional<FunctionCapability> functionCapability = functionCapabilityRepository.findById(capId);
-		if (functionCapability.isPresent()) {
-			List<FunctionCapabilityAssignment> functionCapabilityAssignments = functionCapabilityAssignmentRepository
-					.findAssignmentsByFunctionCapability(capId);
-			return ResponseEntity.ok(functionCapabilityAssignments);
+	@GetMapping("/function-capability-assignments")
+	public ResponseEntity<ResultEntity> getFunctionCapabilityAssignments() {
+		ResultEntity resultEntity = new ResultEntity();
+		List<FunctionCapabilityAssignment> functionCapabilityAssignments = functionCapabilityAssignmentRepository
+				.findAll();
+		resultEntity.setCount((long) functionCapabilityAssignments.size());
+		if (!functionCapabilityAssignments.isEmpty()) {
+			List<ResultDTO> functionCapabilityAssignmentList = new ArrayList<>(functionCapabilityAssignments.size());
+			functionCapabilityAssignmentList.addAll(functionCapabilityAssignments);
+			resultEntity.setResult(functionCapabilityAssignmentList);
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("No Function Capability Assignments found"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@PostMapping("/function/{id}/capability/{capId}/employee")
-	public ResponseEntity<FunctionCapabilityAssignment> saveFunctionCapabilityAssignment(
-			@PathVariable(name = "id") String id, @PathVariable(name = "capId") String capId,
+	@PostMapping("/function-capability-assignments")
+	public ResponseEntity<ResultEntity> saveFunctionCapabilityAssignment(
 			@RequestBody FunctionCapabilityAssignment functionCapabilityAssignment) {
-		Optional<FunctionCapability> functionCapability = functionCapabilityRepository.findById(capId);
-		if (functionCapability.isPresent()) {
-			functionCapabilityAssignment.setFunctionCapability(functionCapability.get());
-			return ResponseEntity.ok(functionCapabilityAssignmentRepository.save(functionCapabilityAssignment));
-		}
-		return ResponseEntity.notFound().build();
-	}
-
-	@PutMapping("/function/{id}/capability/{capId}/employee")
-	public ResponseEntity<FunctionCapabilityAssignment> updateFunctionCapabilityAssignment(
-			@PathVariable(name = "id") String id, @PathVariable(name = "capId") String capId,
-			@RequestBody FunctionCapabilityAssignment functionCapabilityAssignment) {
-		Optional<FunctionCapabilityAssignment> func = functionCapabilityAssignmentRepository
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
 				.findById(functionCapabilityAssignment.getId());
-		if (func.isPresent()) {
-			FunctionCapabilityAssignment func1 = func.get();
-			func1.update(functionCapabilityAssignment);
-			return ResponseEntity.ok(functionCapabilityAssignmentRepository.save(func1));
+		if (!functionCapabilityAssignmentOpt.isPresent()) {
+			resultEntity.setCount(0L);
+			resultEntity.setErrors(
+					List.of("Function Capability Assignment not found for id:" + functionCapabilityAssignment.getId()));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+		} else {
+			functionCapabilityAssignmentRepository.save(functionCapabilityAssignment);
+			List<ResultDTO> functionCapabilityAssignmentList = new ArrayList<>(1);
+			functionCapabilityAssignmentList.add(functionCapabilityAssignment);
+			resultEntity.setCount((long) functionCapabilityAssignmentList.size());
+			resultEntity.setResult(functionCapabilityAssignmentList);
+			return ResponseEntity.ok(resultEntity);
+
 		}
-		return ResponseEntity.notFound().build();
 	}
 
-	@GetMapping("/function/{id}/capability/{capId}/employee/{empId}")
-	public ResponseEntity<FunctionCapabilityAssignment> getFunctionCapabilityAssignmentById(
-			@PathVariable(name = "id") String id, @PathVariable(name = "capId") String capId,
-			@PathVariable(name = "empId") String empId) {
-		Optional<FunctionCapabilityAssignment> functionCapabilityAssignment = functionCapabilityAssignmentRepository
-				.findById(empId);
-		if (functionCapabilityAssignment.isPresent()) {
-			return ResponseEntity.ok(functionCapabilityAssignment.get());
+	@PutMapping("/function-capability-assignments")
+	public ResponseEntity<ResultEntity> updateFunctionCapabilityAssignment(
+			@RequestBody FunctionCapabilityAssignment functionCapabilityAssignment) {
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
+				.findById(functionCapabilityAssignment.getId());
+		if (functionCapabilityAssignmentOpt.isPresent()) {
+
+			FunctionCapabilityAssignment functionCapabilityAssignment1 = functionCapabilityAssignmentOpt.get();
+			functionCapabilityAssignment1.update(functionCapabilityAssignment);
+			functionCapabilityAssignmentRepository.save(functionCapabilityAssignment1);
+			List<ResultDTO> functionCapabilityAssignmentList = new ArrayList<>(1);
+			functionCapabilityAssignmentList.add(functionCapabilityAssignment1);
+			resultEntity.setCount((long) functionCapabilityAssignmentList.size());
+			resultEntity.setResult(functionCapabilityAssignmentList);
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(
+				List.of("Function Capability Assignment not found for id:" + functionCapabilityAssignment.getId()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+
 	}
 
 	@GetMapping("/reportingpillar")
-	public ResponseEntity<List<ReportingPillar>> getReportingPillars() {
-		return ResponseEntity.ok(reportingPillarRepository.findAll());
+	public ResponseEntity<ResultEntity> getReportingPillars() {
+		ResultEntity resultEntity = new ResultEntity();
+		List<ReportingPillar> reportingPillars = reportingPillarRepository.findAll();
+		resultEntity.setCount((long) reportingPillars.size());
+		if (reportingPillars.isEmpty()) {
+			resultEntity.setErrors(List.of("No Reporting Pillars found"));
+		} else {
+			List<ResultDTO> reportingPillarList = new ArrayList<>(reportingPillars.size());
+			reportingPillarList.addAll(reportingPillars);
+			resultEntity.setResult(reportingPillarList);
+		}
+		return ResponseEntity.ok(resultEntity);
 	}
 
 	@GetMapping("/reportingpillar/{id}")
-	public ResponseEntity<ReportingPillar> getReportingPillarById(@PathVariable(name = "id") String id) {
+	public ResponseEntity<ResultEntity> getReportingPillarById(@PathVariable(name = "id") String id) {
 		Optional<ReportingPillar> reportingPillar = reportingPillarRepository.findById(id);
+		ResultEntity resultEntity = new ResultEntity();
 		if (reportingPillar.isPresent()) {
-			return ResponseEntity.ok(reportingPillar.get());
+			List<ResultDTO> reportingPillarList = new ArrayList<>(1);
+			reportingPillarList.add(reportingPillar.get());
+			resultEntity.setResult(reportingPillarList);
+			resultEntity.setCount((long) reportingPillarList.size());
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Reporting Pillar not found for id:" + id));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
 	@PostMapping("/reportingpillar")
-	public ResponseEntity<ReportingPillar> saveReportingPillar(@RequestBody ReportingPillar reportingPillar) {
-		return ResponseEntity.ok(reportingPillarRepository.save(reportingPillar));
+	public ResponseEntity<ResultEntity> saveReportingPillar(@RequestBody ReportingPillar reportingPillar) {
+		ResultEntity resultEntity = new ResultEntity();
+		reportingPillarRepository.save(reportingPillar);
+		List<ResultDTO> reportingPillarList = new ArrayList<>(1);
+		reportingPillarList.add(reportingPillar);
+		resultEntity.setCount((long) reportingPillarList.size());
+		resultEntity.setResult(reportingPillarList);
+		return ResponseEntity.ok(resultEntity);
+
 	}
 
 	@PutMapping("/reportingpillar")
-	public ResponseEntity<ReportingPillar> updateReportingPillar(@RequestBody ReportingPillar reportingPillar) {
-		Optional<ReportingPillar> rep = reportingPillarRepository.findById(reportingPillar.getId());
-		if (rep.isPresent()) {
-			ReportingPillar rep1 = rep.get();
-			rep1.update(reportingPillar);
-			return ResponseEntity.ok(reportingPillarRepository.save(rep1));
+	public ResponseEntity<ResultEntity> updateReportingPillar(@RequestBody ReportingPillar reportingPillar) {
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<ReportingPillar> reportingPillarOpt = reportingPillarRepository.findById(reportingPillar.getId());
+		if (reportingPillarOpt.isPresent()) {
+			ReportingPillar reportingPillar1 = reportingPillarOpt.get();
+			reportingPillar1.update(reportingPillar);
+			reportingPillarRepository.save(reportingPillar1);
+			List<ResultDTO> reportingPillarList = new ArrayList<>(1);
+			reportingPillarList.add(reportingPillar1);
+			resultEntity.setCount((long) reportingPillarList.size());
+			resultEntity.setResult(reportingPillarList);
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Reporting Pillar not found for id:" + reportingPillar.getId()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@GetMapping("/reportingpillar/{id}/function-capability")
-	public ResponseEntity<List<Function>> getFunctionsCapabilityByReportingPillar(
-			@PathVariable(name = "id") String id) {
-		Optional<ReportingPillar> reportingPillar = reportingPillarRepository.findById(id);
+	@GetMapping("/reportingpillar/{reportingPillarId}/function-capability")
+	public ResponseEntity<ResultEntity> getFunctionsCapabilityByReportingPillar(
+			@PathVariable(name = "reportingPillarId") String reportingPillarId) {
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<ReportingPillar> reportingPillar = reportingPillarRepository.findById(reportingPillarId);
 		if (reportingPillar.isPresent()) {
-			List<Function> functions = functionCapabilityRepository.findByReportingPillar(id);
-			return ResponseEntity.ok(functions);
+			List<FunctionCapability> functionCapabilities = reportingPillar.get().getFunctionCapabilityList();
+			resultEntity.setCount((long) functionCapabilities.size());
+			if (functionCapabilities.isEmpty()) {
+				resultEntity
+						.setErrors(List.of("No Function Capabilities found for Reporting Pillar:" + reportingPillarId));
+			} else {
+				List<ResultDTO> functionCapabilityList = new ArrayList<>(functionCapabilities.size());
+				functionCapabilityList.addAll(functionCapabilities);
+				resultEntity.setResult(functionCapabilityList);
+			}
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Reporting Pillar not found for id:" + reportingPillarId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+
 	}
 
 }
