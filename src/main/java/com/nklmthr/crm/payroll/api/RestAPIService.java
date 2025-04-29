@@ -66,7 +66,6 @@ public class RestAPIService {
 	public ResponseEntity<ResultEntity> getEmployeesById(@PathVariable(name = "id") String id) {
 		Optional<Employee> employee = employeeRepository.findById(id);
 		ResultEntity resultEntity = new ResultEntity();
-
 		if (employee.isPresent()) {
 			List<ResultDTO> employeeList = new ArrayList<>(1);
 			employeeList.add(employee.get());
@@ -86,8 +85,10 @@ public class RestAPIService {
 		if (emp.isPresent()) {
 			Employee emp1 = emp.get();
 			emp1.update(employee);
+			employeeRepository.save(emp1);
 			List<ResultDTO> employeeList = new ArrayList<>(1);
 			employeeList.add(emp1);
+			resultEntity.setCount((long) employeeList.size());
 			resultEntity.setResult(employeeList);
 			return ResponseEntity.ok(resultEntity);
 		}
@@ -109,44 +110,85 @@ public class RestAPIService {
 	}
 
 	@GetMapping("/function")
-	public ResponseEntity<List<Function>> getFunctions() {
-		return ResponseEntity.ok(functionRepository.findAll());
+	public ResponseEntity<ResultEntity> getFunctions() {
+		ResultEntity resultEntity = new ResultEntity();
+		List<Function> functions = functionRepository.findAll();
+		resultEntity.setCount((long) functions.size());
+		if (functions.isEmpty()) {
+			resultEntity.setErrors(List.of("No functions found"));
+		} else {
+			List<ResultDTO> functionList = new ArrayList<>(functions.size());
+			functionList.addAll(functions);
+			resultEntity.setResult(functionList);
+		}
+		return ResponseEntity.ok(resultEntity);
 	}
 
 	@GetMapping("/function/{id}")
-	public ResponseEntity<Function> getFunctionById(@PathVariable(name = "id") String id) {
+	public ResponseEntity<ResultEntity> getFunctionById(@PathVariable(name = "id") String id) {
 		Optional<Function> function = functionRepository.findById(id);
+		ResultEntity resultEntity = new ResultEntity();
+
 		if (function.isPresent()) {
-			return ResponseEntity.ok(function.get());
+			List<ResultDTO> functionList = new ArrayList<>(1);
+			functionList.add(function.get());
+			resultEntity.setResult(functionList);
+			resultEntity.setCount((long) functionList.size());
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function not found for id:" + id));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
 	@PostMapping("/function")
-	public ResponseEntity<List<Function>> saveFunction(@RequestBody List<Function> functionList) {
-		return ResponseEntity.ok(functionRepository.saveAll(functionList));
+	public ResponseEntity<ResultEntity> saveFunction(@RequestBody List<Function> functionList) {
+		ResultEntity resultEntity = new ResultEntity();
+		functionRepository.saveAll(functionList);
+		List<ResultDTO> resultList = new ArrayList<>(functionList.size());
+		resultEntity.setCount((long) functionList.size());
+		resultList.addAll(functionList);
+		resultEntity.setResult(resultList);
+		return ResponseEntity.ok(resultEntity);
+		
 	}
 
 	@PutMapping("/function")
-	public ResponseEntity<Function> updateFunction(@RequestBody Function function) {
+	public ResponseEntity<ResultEntity> updateFunction(@RequestBody Function function) {
+		ResultEntity resultEntity = new ResultEntity();
 		Optional<Function> func = functionRepository.findById(function.getId());
 		if (func.isPresent()) {
 			Function func1 = func.get();
 			func1.update(function);
-			return ResponseEntity.ok(functionRepository.save(func1));
+			List<ResultDTO> functionList = new ArrayList<>(1);
+			functionList.add(func1);
+			resultEntity.setResult(functionList);
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function not found for id:" + function.getId()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
-	@GetMapping("/function/{id}/capability")
-	public ResponseEntity<List<FunctionCapability>> getFunctionCapabilities(@PathVariable(name = "id") String id) {
-		Optional<Function> function = functionRepository.findById(id);
+	@GetMapping("/function/{functionId}/capability")
+	public ResponseEntity<ResultEntity> getFunctionCapabilities(@PathVariable(name = "functionId") String functionId) {
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<Function> function = functionRepository.findById(functionId);
 		if (function.isPresent()) {
-			List<FunctionCapability> functionCapabilities = functionCapabilityRepository
-					.findByFunction(function.get().getId());
-			return ResponseEntity.ok(functionCapabilities);
+			List<FunctionCapability> functionCapabilities = function.get().getFunctionCapabilities();
+			resultEntity.setCount((long) functionCapabilities.size());
+			if (functionCapabilities.isEmpty()) {
+				resultEntity.setErrors(List.of("No Function Capabilities found for Function:" + functionId));
+			} else {
+				List<ResultDTO> functionCapabilityList = new ArrayList<>(functionCapabilities.size());
+				functionCapabilityList.addAll(functionCapabilities);
+				resultEntity.setResult(functionCapabilityList);
+			}
+			return ResponseEntity.ok(resultEntity);
 		}
-		return ResponseEntity.notFound().build();
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function not found for id:" + functionId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
 	@PostMapping("/function/{id}/capability")
