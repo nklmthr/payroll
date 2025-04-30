@@ -1,0 +1,26 @@
+meta {
+  name: UpdateEmployee
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/v1/payroll/employee
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "id": "de7ee4f5-c08a-487e-9935-411d347bcd52",
+    "firstName": "Nikhil",
+    "middleName": "",
+    "lastName": "Mathur",
+    "mobile": "0123456789"
+  }
+}

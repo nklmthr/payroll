@@ -1,0 +1,24 @@
+meta {
+  name: CreateFunctionCapabilities
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/v1/payroll/function/c2c1d7d7-50e1-44dc-a214-7fa3cb19f847/function-capability
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "id": "26303d76-e670-44ad-b468-b1c43b7ac093",
+    "startDate":"2025-01-01",
+    "endDate":"2025-12-31",
+    "capability": "80 Leaves per day"
+  }
+}

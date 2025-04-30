@@ -1,0 +1,40 @@
+meta {
+  name: CreateFunctions
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/v1/payroll/function
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  [
+    {
+      "id": "c2c1d7d7-50e1-44dc-a214-7fa3cb19f847",
+      "name": "Plucking of Green Leaves"
+    },
+    {
+      "id": "7e5a62da-c32f-4d1a-ac82-9acffa3ee798",
+      "name": "Spraying pesticides"
+    },
+    {
+      "id": "d369aace-b9ff-48c5-9a93-12bf9ff36f8a",
+      "name": "Spraying Weedicide"
+    },
+    {
+      "id": "e8c73b1b-1f54-4c7f-963b-47c1f566f6eb",
+      "name": "Sickling/Clg.creepers"
+    },
+    {
+      "id": "e3af31cc-eae6-428c-bc18-19c9fad3bf4d",
+      "name": ".Bridges and road reparing/ removing tree/Bundh"
+    }
+  ]
+}

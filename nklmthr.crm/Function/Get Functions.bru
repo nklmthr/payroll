@@ -1,0 +1,16 @@
+meta {
+  name: Get Functions
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/v1/payroll/function
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}

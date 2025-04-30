@@ -287,22 +287,13 @@ public class RestAPIService {
 	public ResponseEntity<ResultEntity> saveFunctionCapabilityAssignment(
 			@RequestBody FunctionCapabilityAssignment functionCapabilityAssignment) {
 		ResultEntity resultEntity = new ResultEntity();
-		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
-				.findById(functionCapabilityAssignment.getId());
-		if (!functionCapabilityAssignmentOpt.isPresent()) {
-			resultEntity.setCount(0L);
-			resultEntity.setErrors(
-					List.of("Function Capability Assignment not found for id:" + functionCapabilityAssignment.getId()));
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
-		} else {
-			functionCapabilityAssignmentRepository.save(functionCapabilityAssignment);
-			List<ResultDTO> functionCapabilityAssignmentList = new ArrayList<>(1);
-			functionCapabilityAssignmentList.add(functionCapabilityAssignment);
-			resultEntity.setCount((long) functionCapabilityAssignmentList.size());
-			resultEntity.setResult(functionCapabilityAssignmentList);
-			return ResponseEntity.ok(resultEntity);
+		functionCapabilityAssignmentRepository.save(functionCapabilityAssignment);
+		List<ResultDTO> functionCapabilityAssignmentList = new ArrayList<>(1);
+		functionCapabilityAssignmentList.add(functionCapabilityAssignment);
+		resultEntity.setCount((long) functionCapabilityAssignmentList.size());
+		resultEntity.setResult(functionCapabilityAssignmentList);
+		return ResponseEntity.ok(resultEntity);
 
-		}
 	}
 
 	@PutMapping("/function-capability-assignments")

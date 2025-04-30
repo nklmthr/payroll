@@ -1,0 +1,23 @@
+meta {
+  name: Create FunctionCapabilityAssignments
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/v1/payroll/function-capability-assignments
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "date":"2025-04-25",
+    "functionCapability":{
+      "id":"26303d76-e670-44ad-b468-b1c43b7ac093"
+    },
+    "employee":{
+      "id":"de7ee4f5-c08a-487e-9935-411d347bcd52"
+    }
+  }
+}

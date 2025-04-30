@@ -1,0 +1,49 @@
+meta {
+  name: CreateEmployee
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/v1/payroll/employee
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  [
+    {
+      "id": "de7ee4f5-c08a-487e-9935-411d347bcd52",
+      "firstName": "Nikhil",
+      "middleName": "",
+      "lastName": "Mathur",
+      "mobile": "9876543210"
+    },
+    {
+      "id": "ef3a070e-2b7f-49cd-84c6-43f53c1f59b6",
+      "firstName": "Janki",
+      "middleName": "",
+      "lastName": "Nandan",
+      "mobile": "9876543210"
+    },
+    {
+      "id": "33695419-edb8-4ef9-b473-bc8f9b8c2235",
+      "firstName": "Ram",
+      "middleName": "",
+      "lastName": "Chandan",
+      "mobile": "9876543210"
+    },
+    {
+      "id": "cd588e01-b440-44d1-a76f-9c5eedf6f881",
+      "firstName": "Raj",
+      "middleName": "",
+      "lastName": "Kushwaha",
+      "mobile": "9876543210"
+    }
+  ]
+}

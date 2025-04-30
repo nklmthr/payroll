@@ -1,0 +1,24 @@
+meta {
+  name: UpdateFunctions
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/v1/payroll/function
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+    {
+      "id": "c2c1d7d7-50e1-44dc-a214-7fa3cb19f847",
+      "name": "Plucking of 2-2 size Green Leaves"
+    }
+    
+}
