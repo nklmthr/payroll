@@ -15,11 +15,20 @@
 
 	<!-- Main Content -->
 	<div class="main-content">
+
+
 		<div class="dashboard-card">
+
 			<h2>Edit Employee</h2>
-			<form th:action="@{/ui/employee/{id}/update (id=${employee.id})}" method="post"
-				th:object="${employee}">
+			<span th:text="${error}" class="error-message"></span>
+			<form th:action="@{/ui/employee/{id}/update (id=${employee.id})}"
+				method="post" th:object="${employee}">
 				<table>
+					<tr>
+						<td th:if="${error} != null" colspan="2"><span
+							style="color: red" th:text="'* '+${error}"></span></td>
+					</tr>
+
 					<tr>
 						<td><label for="firstName">First Name</label> <input
 							type="text" th:field="*{firstName}" required /></td>

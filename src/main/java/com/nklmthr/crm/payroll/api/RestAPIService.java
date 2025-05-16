@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,6 +63,13 @@ public class RestAPIService {
 		return ResponseEntity.ok(resultEntity);
 	}
 
+	@DeleteMapping("/employee/{employeeId}")
+	public ResponseEntity<ResultEntity> deleteEmployee(String employeeId) {
+		employeeRepository.deleteById(employeeId);
+		return getEmployees();
+		
+	}
+	
 	@GetMapping("/employee/{id}")
 	public ResponseEntity<ResultEntity> getEmployeesById(@PathVariable(name = "id") String id) {
 		Optional<Employee> employee = employeeRepository.findById(id);
@@ -405,5 +413,6 @@ public class RestAPIService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 
 	}
+	
 
 }

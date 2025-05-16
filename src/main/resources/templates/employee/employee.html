@@ -37,7 +37,7 @@
 						<td th:text="${emp.mobile}"></td>
 						<td class="actions">
 							<a th:href="@{/ui/employee/{id}/edit (id=${emp.id})}" class="btn blue">Edit</a>
-							<button class="delete">Delete</button>
+							<a th:href="@{/ui/employee/{id}/delete (id=${emp.id})}" class="btn blue">Delete</a>
 						</td>
 					</tr>
 				</tbody>

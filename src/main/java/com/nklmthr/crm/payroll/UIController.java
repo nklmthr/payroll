@@ -18,7 +18,7 @@ import com.nklmthr.crm.payroll.dto.Employee;
 @RequestMapping("/ui")
 public class UIController {
 	private static Logger logger = Logger.getLogger(UIController.class);
-	
+
 	@Autowired
 	RestAPIService restAPIService;
 
@@ -66,22 +66,36 @@ public class UIController {
 		logger.info("Employee saved successfully");
 		return "employee/employee";
 	}
-	
+
 	@PostMapping("/employee/{employeeId}/update")
 	public String getUpdateEmployeePage(Model m, @PathVariable("employeeId") String employeeId, Employee employee) {
-		restAPIService.updateEmployee(employeeId, employee);
-		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
-		logger.info("Employee updated successfully");
+		try {
+			restAPIService.updateEmployee(employeeId, employee);
+			m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
+			logger.info("Employee updated successfully");
+		} catch (Exception e) {
+			logger.error("Error updating employee: " + e.getMessage(), e);
+			m.addAttribute("error", "Error updating employee: " + e.getMessage());
+			return "redirect:edit";
+		}
 		return "employee/employee";
 	}
-	
+
 	@GetMapping("/employee/{employeeId}/edit")
 	public String getEditEmployeePage(Model m, @PathVariable("employeeId") String employeeId) {
 		Employee employee = (Employee) restAPIService.getEmployeesById(employeeId).getBody().getResult().get(0);
 		m.addAttribute("employee", employee);
 		logger.info("Employee fetched successfully");
-		
+
 		return "employee/editEmployee";
+	}
+
+	@GetMapping("/employee/{employeeId}/delete")
+	public String getDeleteEmployeePage(Model m, @PathVariable("employeeId") String employeeId) {
+		restAPIService.deleteEmployee(employeeId);
+		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
+		logger.info("Employee deleted successfully");
+		return "employee/employee";
 	}
 
 	@GetMapping("/function")
