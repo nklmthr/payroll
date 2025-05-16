@@ -1,25 +1,32 @@
 package com.nklmthr.crm.payroll;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nklmthr.crm.payroll.api.RestAPIService;
+import com.nklmthr.crm.payroll.dto.Employee;
 
 @Controller
 @RequestMapping("/ui")
 public class UIController {
+	private static Logger logger = Logger.getLogger(UIController.class);
 	
 	@Autowired
 	RestAPIService restAPIService;
-	
+
 	@GetMapping("/login")
 	public String getLoginPage(Model m) {
 		return "login";
 	}
+
 //	
 //	@GetMapping("/logout")
 //	public String checkLoginPage(Model m) {
@@ -29,12 +36,12 @@ public class UIController {
 	public String getHomePage(Model m) {
 		return "home";
 	}
-	
+
 	@GetMapping("/top")
 	public String getTopBar(Model m) {
 		return "top";
 	}
-	
+
 	@GetMapping("/sidebar")
 	public String getSideBar(Model m) {
 		return "sidebar";
@@ -45,25 +52,57 @@ public class UIController {
 		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
 		return "employee/employee";
 	}
+
+	@GetMapping("/employee/add")
+	public String getAddEmployeePage(Model m) {
+		m.addAttribute("employee", new Employee());
+		return "employee/addEmployee";
+	}
+
+	@PostMapping("/employee/save")
+	public String getSaveEmployeePage(Model m, Employee employee) {
+		restAPIService.saveEmployee(List.of(employee));
+		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
+		logger.info("Employee saved successfully");
+		return "employee/employee";
+	}
 	
+	@PostMapping("/employee/{employeeId}/update")
+	public String getUpdateEmployeePage(Model m, @PathVariable("employeeId") String employeeId, Employee employee) {
+		restAPIService.updateEmployee(employeeId, employee);
+		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
+		logger.info("Employee updated successfully");
+		return "employee/employee";
+	}
+	
+	@GetMapping("/employee/{employeeId}/edit")
+	public String getEditEmployeePage(Model m, @PathVariable("employeeId") String employeeId) {
+		Employee employee = (Employee) restAPIService.getEmployeesById(employeeId).getBody().getResult().get(0);
+		m.addAttribute("employee", employee);
+		logger.info("Employee fetched successfully");
+		
+		return "employee/editEmployee";
+	}
+
 	@GetMapping("/function")
 	public String getFunctionPage(Model m) {
 		m.addAttribute("functions", restAPIService.getFunctions().getBody().getResult());
 		return "function/function";
 	}
-	
+
 	@GetMapping("/function/{functionId}/function-capability")
 	public String getfunctionCapabilityPage(Model m, @PathVariable("functionId") String functionId) {
-		m.addAttribute("functionCapabilities", restAPIService.getFunctionCapabilities(functionId).getBody().getResult());
+		m.addAttribute("functionCapabilities",
+				restAPIService.getFunctionCapabilities(functionId).getBody().getResult());
 		return "functionCapability/functionCapability";
 	}
-	
+
 	@GetMapping("/assignment")
 	public String getAssignmentPage(Model m) {
 		m.addAttribute("assignments", restAPIService.getFunctionCapabilityAssignments().getBody().getResult());
 		return "assignment/assignment";
 	}
-	
+
 	@GetMapping("/report")
 	public String getReportPage(Model m) {
 		return "report/report";

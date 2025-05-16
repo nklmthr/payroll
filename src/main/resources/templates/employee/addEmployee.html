@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Employees</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+	<div th:replace="~{top :: top}"></div>
+
+	<div th:replace="~{sidebar :: sidebar}"></div>
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="dashboard-card">
+			<h2>Add New Employee</h2>
+			<form th:action="@{/ui/employee/save}" method="post"
+				th:object="${employee}">
+				<table>
+					<tr>
+						<td><label for="firstName">First Name</label> <input
+							type="text" th:field="*{firstName}" required /></td>
+						<td><label for="lastName">Last Name</label> <input
+							type="text" th:field="*{lastName}" required /></td>
+					</tr>
+					<tr>
+						<td><label for="email">Email</label> <input type="email"
+							th:field="*{email}" required /></td>
+
+						<td><label for="mobile">Phone</label> <input type="text"
+							th:field="*{mobile}" /></td>
+					</tr>
+				</table>
+
+				<div class="form-actions">
+					<button type="submit" class="btn green">Add Employee</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -79,9 +79,9 @@ public class RestAPIService {
 	}
 
 	@PutMapping("/employee")
-	public ResponseEntity<ResultEntity> updateEmployee(@RequestBody Employee employee) {
+	public ResponseEntity<ResultEntity> updateEmployee(@PathVariable String id,  @RequestBody Employee employee) {
 		ResultEntity resultEntity = new ResultEntity();
-		Optional<Employee> emp = employeeRepository.findById(employee.getId());
+		Optional<Employee> emp = employeeRepository.findById(id);
 		if (emp.isPresent()) {
 			Employee emp1 = emp.get();
 			emp1.update(employee);

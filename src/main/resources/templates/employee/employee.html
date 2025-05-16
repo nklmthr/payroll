@@ -17,6 +17,7 @@
 	<div class="main-content">
 		<div class="dashboard-card">
 			<h2>Employees</h2>
+			<a th:href="@{/ui/employee/add}" class="btn green">+ Add</a>
 			<table>
 				<thead>
 					<tr>
@@ -35,7 +36,7 @@
 						<td th:text="${emp.lastName}"></td>
 						<td th:text="${emp.mobile}"></td>
 						<td class="actions">
-							<button>Edit</button>
+							<a th:href="@{/ui/employee/{id}/edit (id=${emp.id})}" class="btn blue">Edit</a>
 							<button class="delete">Delete</button>
 						</td>
 					</tr>

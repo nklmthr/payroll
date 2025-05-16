@@ -23,6 +23,9 @@ public class Employee extends ResultDTO {
 	@Column
 	private String lastName;
 
+	@Column
+	private String email;
+
 	@Column(length = 10)
 	private String mobile;
 
@@ -74,6 +77,14 @@ public class Employee extends ResultDTO {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public void update(Employee employee) {
