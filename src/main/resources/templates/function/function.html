@@ -9,13 +9,7 @@
 </head>
 <body>
 
-	<!-- Top Navigation -->
-	<div class="top-nav">
-		<div class="logo">💼 Function Manager</div>
-		<div class="user-actions">
-			<a href="#">Profile</a> <a href="#">Logout</a>
-		</div>
-	</div>
+	<div th:replace="~{top :: top}"></div>
 
 	<div th:replace="~{sidebar :: sidebar}"></div>
 

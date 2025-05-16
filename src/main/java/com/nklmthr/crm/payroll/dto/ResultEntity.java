@@ -1,5 +1,6 @@
 package com.nklmthr.crm.payroll.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResultEntity {
@@ -7,7 +8,7 @@ public class ResultEntity {
 	private Long count;
 	private List<String> errors;
 	private List<String> warnings;
-	private List<ResultDTO> result;
+	private List<ResultDTO> result = new ArrayList<>();
 	public Long getCount() {
 		return count;
 	}

@@ -3,8 +3,6 @@ package com.nklmthr.crm.payroll.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +19,17 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 
 	@Column
 	private LocalDate date;
+	
+	@Column
+	private WorkShift workShift;
+
+	public WorkShift getWorkShift() {
+		return workShift;
+	}
+
+	public void setWorkShift(WorkShift workShift) {
+		this.workShift = workShift;
+	}
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "FunctionCapability", referencedColumnName = "id")

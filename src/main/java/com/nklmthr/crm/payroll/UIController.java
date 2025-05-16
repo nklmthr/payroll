@@ -16,9 +16,23 @@ public class UIController {
 	@Autowired
 	RestAPIService restAPIService;
 	
+	@GetMapping("/login")
+	public String getLoginPage(Model m) {
+		return "login";
+	}
+//	
+//	@GetMapping("/logout")
+//	public String checkLoginPage(Model m) {
+//		return "/home";
+//	}
 	@GetMapping("/home")
 	public String getHomePage(Model m) {
 		return "home";
+	}
+	
+	@GetMapping("/top")
+	public String getTopBar(Model m) {
+		return "top";
 	}
 	
 	@GetMapping("/sidebar")

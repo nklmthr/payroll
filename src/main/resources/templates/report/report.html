@@ -9,13 +9,7 @@
 </head>
 <body>
 
-	<!-- Top Navigation -->
-	<div class="top-nav">
-		<div class="logo">💼 Reports</div>
-		<div class="user-actions">
-			<a href="#">Profile</a> <a href="#">Logout</a>
-		</div>
-	</div>
+	<div th:replace="~{top :: top}"></div>
 
 	<div th:replace="~{sidebar :: sidebar}"></div>
 
@@ -23,9 +17,8 @@
 	<div class="main-content">
 		<div class="dashboard-card">
 			<h2>Reports</h2>
-			<br /> 
-			<br>
-			<img th:src="@{/images/financial-documents.jpg}" alt="Logo" width="150" />
+			<br /> <br> <img th:src="@{/images/financial-documents.jpg}"
+				alt="Logo" width="150" />
 			<h3>Here we will generate some profitable reports for you</h3>
 		</div>
 	</div>

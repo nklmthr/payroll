@@ -1,12 +1,12 @@
 package com.nklmthr.crm.payroll.dto;
 
+import java.util.List;
 import java.util.UUID;
-
-import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -25,6 +25,9 @@ public class Employee extends ResultDTO {
 
 	@Column(length = 10)
 	private String mobile;
+
+	@OneToMany(mappedBy = "employee")
+	private List<EmployeeSalary> employeeSalary;
 
 	@PrePersist
 	protected void generateIdIfMissing() {
