@@ -1,5 +1,7 @@
 package com.nklmthr.crm.payroll.dto;
 
+import com.google.gson.Gson;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -95,6 +97,9 @@ public class AppUser {
 
 	public void setRoles(String roles) {
 		this.roles = roles;
+	}
+	public String toString() {
+		return new Gson().toJson(this);
 	}
 
 }

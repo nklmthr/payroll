@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.Gson;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,6 +57,11 @@ public class ReportingPillar extends ResultDTO {
 
 	public void setFunctionCapabilityList(List<FunctionCapability> functionCapabilityList) {
 		this.functionCapabilityList = functionCapabilityList;
+	}
+
+	@Override
+	public String toString() {
+		return new Gson().toJson(this);
 	}
 
 }

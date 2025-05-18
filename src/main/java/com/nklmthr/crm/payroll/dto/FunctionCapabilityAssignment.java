@@ -1,13 +1,19 @@
 package com.nklmthr.crm.payroll.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
@@ -19,24 +25,12 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 
 	@Column
 	private LocalDate date;
-	
+
 	@Column
 	private WorkShift workShift;
-	
+
 	@Column
 	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);
-	
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
-	private EmployeeSalary employeeSalary;
-
-	public EmployeeSalary getEmployeeSalary() {
-		return employeeSalary;
-	}
-
-	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
-		this.employeeSalary = employeeSalary;
-	}
 
 	public WorkShift getWorkShift() {
 		return workShift;
@@ -108,4 +102,9 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 		this.employee = employee;
 	}
 
+	@Override
+	public String toString() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
+	}
 }

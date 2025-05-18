@@ -3,6 +3,9 @@ package com.nklmthr.crm.payroll.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -96,6 +99,12 @@ public class FunctionCapability extends ResultDTO {
 		this.function = functionCapability.getFunction();
 		this.reportingPillar = functionCapability.getReportingPillar();
 
+	}
+
+	@Override
+	public String toString() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
 	}
 
 }

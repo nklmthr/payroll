@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Reports</title>
+<title>Daily Report</title>
 <link
 	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
 	rel="stylesheet">
@@ -16,10 +16,34 @@
 	<!-- Main Content -->
 	<div class="main-content">
 		<div class="dashboard-card">
-			<h2>Reports</h2>
-			<br /> <br> <img th:src="@{/images/financial-documents.jpg}"
-				alt="Logo" width="150" />
-			<h3>Here we will generate some profitable reports for you</h3>
+			<h2>Daily Report</h2>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Function</th>
+						<th>Capability</th>
+						<th>Count</th>
+						<th>Total Amount</th>
+						<th>Total PF</th>
+						<th>Total Tax</th>
+						<th>Total Net Salary</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="report : ${reports}">
+						<td th:text="${report.date}"></td>
+						<td th:text="${report.functionName}"></td>
+						<td th:text="${report.capabilty}"></td>
+						<td th:text="${report.assignmentCount}"></td>
+						<td th:text="${report.totalSalary}"></td>
+						<td th:text="${report.totalPf}"></td>
+						<td th:text="${report.totalTax}"></td>
+						<td th:text="${report.totalNetSalary}"></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

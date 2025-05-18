@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,6 +59,12 @@ public class Function extends ResultDTO {
 
 	public void setFunctionCapabilities(List<FunctionCapability> functionCapabilities) {
 		this.functionCapabilities = functionCapabilities;
+	}
+
+	@Override
+	public String toString() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
 	}
 
 }

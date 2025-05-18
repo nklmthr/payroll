@@ -5,15 +5,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -23,23 +25,19 @@ public class EmployeeSalary extends ResultDTO {
 	private String id;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "Employee", referencedColumnName = "id")
-	@JsonIgnore
+	@JoinColumn(name = "employee", referencedColumnName = "id")
 	private Employee employee;
-	
-	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "employeeSalary")
-	private List<FunctionCapabilityAssignment> functionCapabilityAssignments;
-	
-	
+
+
 	@Column
 	private LocalDate startDate;
-	
+
 	@Column
 	private LocalDate endDate;
-	
+
 	@Column
 	private BigDecimal salary;
-	
+
 	@PrePersist
 	protected void generateIdIfMissing() {
 		if (this.id == null) {
@@ -58,6 +56,7 @@ public class EmployeeSalary extends ResultDTO {
 	public Employee getEmployee() {
 		return employee;
 	}
+
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
 	}
@@ -84,6 +83,12 @@ public class EmployeeSalary extends ResultDTO {
 
 	public void setSalary(BigDecimal salary) {
 		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
 	}
 
 }

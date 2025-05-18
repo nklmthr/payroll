@@ -1,5 +1,6 @@
 package com.nklmthr.crm.payroll;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,6 +19,8 @@ import com.nklmthr.crm.payroll.dto.EmployeeSalary;
 import com.nklmthr.crm.payroll.dto.Function;
 import com.nklmthr.crm.payroll.dto.FunctionCapability;
 import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
+import com.nklmthr.crm.payroll.dto.Report;
+import com.nklmthr.crm.payroll.dto.ResultDTO;
 import com.nklmthr.crm.payroll.dto.WorkShift;
 
 @Controller
@@ -98,20 +101,20 @@ public class UIController {
 		logger.info("Employee deleted successfully");
 		return "employee/employee";
 	}
-	
+
 	@GetMapping("/employee/salary")
 	public String getEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId) {
 		m.addAttribute("employeeSalaries", restAPIService.getEmployeeSalaries(employeeId).getBody().getResult());
 		m.addAttribute("employee", restAPIService.getEmployeesById(employeeId).getBody().getResult().get(0));
 		return "employee/listEmployeeSalary";
 	}
-	
+
 	@GetMapping("/employee/salary/add")
 	public String getAddEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId) {
 		m.addAttribute("employeeSalary", new EmployeeSalary());
 		return "employee/addEmployeeSalary";
 	}
-	
+
 	@PostMapping("/employee/salary/save")
 	public String getSaveEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId,
 			EmployeeSalary employeeSalary) {
@@ -127,13 +130,13 @@ public class UIController {
 		m.addAttribute("functions", restAPIService.getFunctions().getBody().getResult());
 		return "function/function";
 	}
-	
+
 	@GetMapping("/function/add")
 	public String getAddFunctionPage(Model m) {
 		m.addAttribute("function", new Function());
 		return "function/addFunction";
 	}
-	
+
 	@PostMapping("/function/save")
 	public String getSaveFunctionPage(Model m, Function function) {
 		restAPIService.saveFunction(List.of(function));
@@ -155,6 +158,7 @@ public class UIController {
 		m.addAttribute("functionId", functionId);
 		return "functionCapability/addFunctionCapability";
 	}
+
 	@PostMapping("/function/function-capability/save")
 	public String getSaveFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
 			FunctionCapability functionCapability) {
@@ -164,13 +168,13 @@ public class UIController {
 		logger.info("Function Capability saved successfully");
 		return "functionCapability/functionCapability";
 	}
-	
+
 	@GetMapping("/assignment")
 	public String getAssignmentPage(Model m) {
 		m.addAttribute("assignments", restAPIService.getFunctionCapabilityAssignments().getBody().getResult());
 		return "assignment/assignment";
 	}
-	
+
 	@GetMapping("/assignment/add")
 	public String getAddAssignmentPage(Model m) {
 		m.addAttribute("assignment", new FunctionCapabilityAssignment());
@@ -187,9 +191,44 @@ public class UIController {
 		logger.info("Assignment saved successfully");
 		return "assignment/assignment";
 	}
-	
+
 	@GetMapping("/report")
 	public String getReportPage(Model m) {
+		List<Report> result = new ArrayList<>();
+		List<ResultDTO> employees = restAPIService.getEmployees().getBody().getResult();
+		logger.info("Employees fetched successfully" + employees);
+		for (ResultDTO dto : employees) {
+			Employee employee = (Employee) dto;
+			List<EmployeeSalary> employeeSalaries = employee.getEmployeeSalary();
+			logger.info("Employee Salaries fetched successfully" + employeeSalaries);
+			for (EmployeeSalary employeeSalary : employeeSalaries) {
+				List<FunctionCapabilityAssignment> functionCapabilityAssignments = employee
+						.getFunctionCapabilityAssignments();
+				logger.info("Function Capability Assignments fetched successfully" + functionCapabilityAssignments);
+				for (FunctionCapabilityAssignment functionCapabilityAssignment : functionCapabilityAssignments) {
+					FunctionCapability functionCapability = functionCapabilityAssignment.getFunctionCapability();
+					Function function = functionCapability.getFunction();
+					logger.info("Function Capability fetched successfully" + functionCapability);
+					logger.info("Function fetched successfully" + function);
+					Report report = new Report();
+					report.setAssignmentCount(report.getAssignmentCount() + 1);
+					report.setCapabilty(functionCapability.getCapability());
+					report.setDate(functionCapabilityAssignment.getDate());
+					report.setFunctionName(function.getName());
+					report.setTotalSalary(
+							report.getTotalSalary().add(employee.getEmployeePayments().get(0).getAmount()));
+					report.setTotalPf(report.getTotalPf().add(employee.getEmployeePayments().get(0).getTotalPf()));
+					report.setTotalTax(report.getTotalTax().add(employee.getEmployeePayments().get(0).getTax()));
+					report.setTotalNetSalary(
+							report.getTotalNetSalary().add(employee.getEmployeePayments().get(0).getNetSalary()));
+
+					result.add(report);
+
+				}
+			}
+		}
+		m.addAttribute("reports", result);
+
 		return "report/report";
 	}
 }

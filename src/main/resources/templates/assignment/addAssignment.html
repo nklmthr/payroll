@@ -39,7 +39,7 @@
 						<td><select th:field="*{functionCapability}">
 								<option th:each="functionCapability : ${functionCapabilities}"
 									th:value="${functionCapability.id}"
-									th:text="${functionCapability.capability}"></option>
+									th:text="${functionCapability.function.name}+' - '+${functionCapability.capability}"></option>
 						</select></td>
 					</tr>
 					<tr>

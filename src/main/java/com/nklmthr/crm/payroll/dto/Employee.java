@@ -3,11 +3,15 @@ package com.nklmthr.crm.payroll.dto;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Employee extends ResultDTO {
@@ -25,7 +29,7 @@ public class Employee extends ResultDTO {
 
 	@Column
 	private String identity;
-	
+
 	public String getIdentity() {
 		return identity;
 	}
@@ -39,7 +43,13 @@ public class Employee extends ResultDTO {
 
 	@OneToMany(mappedBy = "employee")
 	private List<EmployeeSalary> employeeSalary;
+	
+	@OneToMany(mappedBy = "employee")
+	private List<EmployeePayment> employeePayments;
 
+	@OneToMany(mappedBy = "employee")
+	private List<FunctionCapabilityAssignment> functionCapabilityAssignments;
+	
 	@PrePersist
 	protected void generateIdIfMissing() {
 		if (this.id == null) {
@@ -95,6 +105,22 @@ public class Employee extends ResultDTO {
 		this.employeeSalary = employeeSalary;
 	}
 
+	public List<EmployeePayment> getEmployeePayments() {
+		return employeePayments;
+	}
+
+	public void setEmployeePayments(List<EmployeePayment> employeePayments) {
+		this.employeePayments = employeePayments;
+	}
+
+	public List<FunctionCapabilityAssignment> getFunctionCapabilityAssignments() {
+		return functionCapabilityAssignments;
+	}
+
+	public void setFunctionCapabilityAssignments(List<FunctionCapabilityAssignment> functionCapabilityAssignments) {
+		this.functionCapabilityAssignments = functionCapabilityAssignments;
+	}
+
 	public void update(Employee employee) {
 		this.firstName = employee.getFirstName();
 		this.middleName = employee.getMiddleName();
@@ -104,9 +130,13 @@ public class Employee extends ResultDTO {
 
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
-				+ lastName + ", mobile=" + mobile + "]";
+		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
+	}
 
+	@Transient
+	public String getFullName() {
+		return firstName + " " + middleName + " " + lastName;
 	}
 
 }
