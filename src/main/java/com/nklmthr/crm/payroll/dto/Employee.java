@@ -24,9 +24,17 @@ public class Employee extends ResultDTO {
 	private String lastName;
 
 	@Column
-	private String email;
+	private String identity;
+	
+	public String getIdentity() {
+		return identity;
+	}
 
-	@Column(length = 10)
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+
+	@Column
 	private String mobile;
 
 	@OneToMany(mappedBy = "employee")
@@ -79,12 +87,12 @@ public class Employee extends ResultDTO {
 		this.mobile = mobile;
 	}
 
-	public String getEmail() {
-		return email;
+	public List<EmployeeSalary> getEmployeeSalary() {
+		return employeeSalary;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmployeeSalary(List<EmployeeSalary> employeeSalary) {
+		this.employeeSalary = employeeSalary;
 	}
 
 	public void update(Employee employee) {

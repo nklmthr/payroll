@@ -121,7 +121,7 @@ th {
 }
 
 .btn.blue {
-	background-color: #007bff;
+	background-color:blue;;
 }
 
 .btn.blue:hover {
@@ -247,27 +247,8 @@ h2 {
 	transition: border-color 0.3s;
 }
 
-.form-input:focus {
-	border-color: #4CAF50;
-	outline: none;
-}
 
 .form-actions {
 	text-align: center;
 	margin-top: 25px;
-}
-
-.btn.green {
-	background-color: #4CAF50;
-	color: white;
-	padding: 12px 24px;
-	font-weight: bold;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	transition: background 0.3s;
-}
-
-.btn.green:hover {
-	background-color: #45a049;
 }

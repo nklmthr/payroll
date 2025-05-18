@@ -21,9 +21,8 @@
 			<table>
 				<thead>
 					<tr>
-						<th>First Name</th>
-						<th>Middle Name</th>
-						<th>Last Name</th>
+						<th>Name</th>
+						<th>Identity</th>
 						<th>Mobile</th>
 						<th>Actions</th>
 					</tr>
@@ -31,9 +30,8 @@
 				<tbody>
 					<tr th:each="emp : ${employees}">
 						<td style="display: none" th:text="${emp.id}">1</td>
-						<td th:text="${emp.firstName}"></td>
-						<td th:text="${emp.middleName}"></td>
-						<td th:text="${emp.lastName}"></td>
+						<td><a th:href="@{/ui/employee/salary (employeeId=${emp.id})}" th:text="${emp.firstName}+' '+${emp.middleName}+' '+${emp.lastName}"></a></td>
+						<td th:text="${emp.identity}"></td>
 						<td th:text="${emp.mobile}"></td>
 						<td class="actions">
 							<a th:href="@{/ui/employee/{id}/edit (id=${emp.id})}" class="btn blue">Edit</a>

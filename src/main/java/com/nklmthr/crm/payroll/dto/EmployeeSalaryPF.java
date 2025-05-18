@@ -4,14 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -19,11 +14,6 @@ public class EmployeeSalaryPF extends ResultDTO {
 
 	@Id
 	private String id;
-
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "EmployeeSalary", referencedColumnName = "id")
-	@JsonIgnore
-	private EmployeeSalary employeeSalary;
 
 	@Column
 	private LocalDate date;
@@ -50,14 +40,6 @@ public class EmployeeSalaryPF extends ResultDTO {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public EmployeeSalary getEmployeeSalary() {
-		return employeeSalary;
-	}
-
-	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
-		this.employeeSalary = employeeSalary;
 	}
 
 	public LocalDate getDate() {

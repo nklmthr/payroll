@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nklmthr.crm.payroll.dao.EmployeeRepository;
+import com.nklmthr.crm.payroll.dao.EmployeeSalaryRepository;
 import com.nklmthr.crm.payroll.dao.FunctionCapabilityAssignmentRepository;
 import com.nklmthr.crm.payroll.dao.FunctionCapabilityRepository;
 import com.nklmthr.crm.payroll.dao.FunctionRepository;
 import com.nklmthr.crm.payroll.dao.ReportingPillarRepository;
 import com.nklmthr.crm.payroll.dto.Employee;
+import com.nklmthr.crm.payroll.dto.EmployeeSalary;
 import com.nklmthr.crm.payroll.dto.Function;
 import com.nklmthr.crm.payroll.dto.FunctionCapability;
 import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
@@ -47,6 +51,9 @@ public class RestAPIService {
 
 	@Autowired
 	private FunctionCapabilityRepository functionCapabilityRepository;
+	
+	@Autowired
+	private EmployeeSalaryRepository employeeSalaryRepository;
 
 	@GetMapping("/employee")
 	public ResponseEntity<ResultEntity> getEmployees() {
@@ -67,9 +74,9 @@ public class RestAPIService {
 	public ResponseEntity<ResultEntity> deleteEmployee(String employeeId) {
 		employeeRepository.deleteById(employeeId);
 		return getEmployees();
-		
+
 	}
-	
+
 	@GetMapping("/employee/{id}")
 	public ResponseEntity<ResultEntity> getEmployeesById(@PathVariable(name = "id") String id) {
 		Optional<Employee> employee = employeeRepository.findById(id);
@@ -87,7 +94,7 @@ public class RestAPIService {
 	}
 
 	@PutMapping("/employee")
-	public ResponseEntity<ResultEntity> updateEmployee(@PathVariable String id,  @RequestBody Employee employee) {
+	public ResponseEntity<ResultEntity> updateEmployee(@PathVariable String id, @RequestBody Employee employee) {
 		ResultEntity resultEntity = new ResultEntity();
 		Optional<Employee> emp = employeeRepository.findById(id);
 		if (emp.isPresent()) {
@@ -115,6 +122,22 @@ public class RestAPIService {
 		resultEntity.setResult(resultList);
 		return ResponseEntity.ok(resultEntity);
 
+	}
+	
+	@PostMapping("/employee/{employeeId}/salary")
+	public HttpEntity<ResultEntity> getEmployeeSalaries(String employeeId) {
+		ResultEntity resultEntity = new ResultEntity();
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			List<ResultDTO> employeeSalaryList = new ArrayList<>(1);
+			employeeSalaryList.addAll(employee.get().getEmployeeSalary());
+			resultEntity.setCount((long) employeeSalaryList.size());
+			resultEntity.setResult(employeeSalaryList);
+			return ResponseEntity.ok(resultEntity);
+		}
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Employee not found for id:" + employeeId));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
 	@GetMapping("/function")
@@ -291,6 +314,22 @@ public class RestAPIService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 	}
 
+	@GetMapping("/function-capabilities")
+	public HttpEntity<ResultEntity> getFunctionCapabilities() {
+		ResultEntity resultEntity = new ResultEntity();
+		List<FunctionCapability> functionCapabilities = functionCapabilityRepository.findAll();
+		resultEntity.setCount((long) functionCapabilities.size());
+		if (!functionCapabilities.isEmpty()) {
+			List<ResultDTO> functionCapabilityList = new ArrayList<>(functionCapabilities.size());
+			functionCapabilityList.addAll(functionCapabilities);
+			resultEntity.setResult(functionCapabilityList);
+			return ResponseEntity.ok(resultEntity);
+		}
+		resultEntity.setCount(0L);
+		resultEntity.setErrors(List.of("Function Capability Assignment not found "));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
+	}
+
 	@PostMapping("/function-capability-assignments")
 	public ResponseEntity<ResultEntity> saveFunctionCapabilityAssignment(
 			@RequestBody FunctionCapabilityAssignment functionCapabilityAssignment) {
@@ -413,6 +452,17 @@ public class RestAPIService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resultEntity);
 
 	}
+
+	public void saveEmployeeSalary(String employeeId, EmployeeSalary employeeSalary) {
+		// TODO Auto-generated method stub
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			employeeSalary.setEmployee(employee.get());
+			employeeSalaryRepository.save(employeeSalary);
+		}
+		
+	}
+
 	
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Employees</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+	<div th:replace="~{top :: top}"></div>
+
+	<div th:replace="~{sidebar :: sidebar}"></div>
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="dashboard-card">
+			<h2>Employee Salary</h2>
+			<table>
+				<tr>
+					<td>
+						<h3
+							th:text="${employee.firstName} + ' '+ ${employee.middleName} +' ' + ${employee.lastName}">
+						th:text="${employee.Mobile}"></h3>
+					</td>
+				</tr>
+			</table>
+			<a th:href="@{/ui/employee/salary/add (employeeId=${param.employeeId})}" class="btn green">+ Add</a>
+			<table>
+				<thead>
+					<tr>
+						<th>Start</th>
+						<th>End Date</th>
+						<th>Salary</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="empSal : ${employeeSalaries}">
+						<td style="display: none" th:text="${empSal.id}">1</td>
+						<td th:text="${empSal.startDate}"></td>
+						<td th:text="${empSal.endDate}"></td>
+						<td th:text="${empSal.salary}"></td>
+						<td class="actions"><a
+							th:href="@{/ui/employeeSalary/{id}/edit (id=${empSal.id})}"
+							class="btn blue">Edit</a> <a
+							th:href="@{/ui/employee/{id}/delete (id=${empSal.id})}"
+							class="btn blue">Delete</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

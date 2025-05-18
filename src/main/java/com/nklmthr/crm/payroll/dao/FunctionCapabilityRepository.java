@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.nklmthr.crm.payroll.dto.Function;
 import com.nklmthr.crm.payroll.dto.FunctionCapability;
-import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
 
 
 @Repository

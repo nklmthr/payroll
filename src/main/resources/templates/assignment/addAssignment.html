@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Assignments</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+	<div th:replace="~{top :: top}"></div>
+
+	<div th:replace="~{sidebar :: sidebar}"></div>
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="dashboard-card">
+			<h2>Add New Assignment</h2>
+			<form th:action="@{/ui/assignment/save}" method="post"
+				th:object="${assignment}">
+				<table>
+					<tr>
+						<td>Date</td>
+						<td><input type="date" th:field="*{date}" /></td>
+						<td>WorkShift</td>
+						<td th:field="*{workShift}"><select><option
+									th:each="workShift : ${workShifts}"
+									th:value="${workShift.name}" th:text="${workShift.name}"></option>
+						</select></td>
+					</tr>
+					<tr>
+						<td><label>Employee</label></td>
+						<td><select th:field="*{employee}">
+								<option th:each="emp : ${employees}" th:value="${emp.id}"
+									th:text="${emp.firstName}+', '+${emp.lastName}"></option>
+						</select></td>
+						<td><label>Function Capability</label></td>
+						<td><select th:field="*{functionCapability}">
+								<option th:each="functionCapability : ${functionCapabilities}"
+									th:value="${functionCapability.id}"
+									th:text="${functionCapability.capability}"></option>
+						</select></td>
+					</tr>
+					<tr>
+                        <td><label>Actual Capability Achieved</label></td>
+                        <td align="left" colspan="4"><input type="number" th:field="*{actualCapabilityAcheivedInPercent}" /></td>
+                        
+				</table>
+
+				<div class="form-actions">
+					<button type="submit" class="btn green">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

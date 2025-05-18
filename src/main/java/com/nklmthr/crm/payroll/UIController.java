@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nklmthr.crm.payroll.api.RestAPIService;
 import com.nklmthr.crm.payroll.dto.Employee;
+import com.nklmthr.crm.payroll.dto.EmployeeSalary;
 import com.nklmthr.crm.payroll.dto.Function;
 import com.nklmthr.crm.payroll.dto.FunctionCapability;
+import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
+import com.nklmthr.crm.payroll.dto.WorkShift;
 
 @Controller
 @RequestMapping("/ui")
@@ -95,6 +98,29 @@ public class UIController {
 		logger.info("Employee deleted successfully");
 		return "employee/employee";
 	}
+	
+	@GetMapping("/employee/salary")
+	public String getEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId) {
+		m.addAttribute("employeeSalaries", restAPIService.getEmployeeSalaries(employeeId).getBody().getResult());
+		m.addAttribute("employee", restAPIService.getEmployeesById(employeeId).getBody().getResult().get(0));
+		return "employee/listEmployeeSalary";
+	}
+	
+	@GetMapping("/employee/salary/add")
+	public String getAddEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId) {
+		m.addAttribute("employeeSalary", new EmployeeSalary());
+		return "employee/addEmployeeSalary";
+	}
+	
+	@PostMapping("/employee/salary/save")
+	public String getSaveEmployeeSalaryPage(Model m, @RequestParam("employeeId") String employeeId,
+			EmployeeSalary employeeSalary) {
+		restAPIService.saveEmployeeSalary(employeeId, employeeSalary);
+		m.addAttribute("employeeSalaries", restAPIService.getEmployeeSalaries(employeeId).getBody().getResult());
+		m.addAttribute("employee", restAPIService.getEmployeesById(employeeId).getBody().getResult().get(0));
+		logger.info("Employee Salary saved successfully");
+		return "employee/listEmployeeSalary";
+	}
 
 	@GetMapping("/function")
 	public String getFunctionPage(Model m) {
@@ -144,7 +170,24 @@ public class UIController {
 		m.addAttribute("assignments", restAPIService.getFunctionCapabilityAssignments().getBody().getResult());
 		return "assignment/assignment";
 	}
+	
+	@GetMapping("/assignment/add")
+	public String getAddAssignmentPage(Model m) {
+		m.addAttribute("assignment", new FunctionCapabilityAssignment());
+		m.addAttribute("employees", restAPIService.getEmployees().getBody().getResult());
+		m.addAttribute("functionCapabilities", restAPIService.getFunctionCapabilities().getBody().getResult());
+		m.addAttribute("workShifts", WorkShift.values());
+		return "assignment/addAssignment";
+	}
 
+	@PostMapping("/assignment/save")
+	public String getSaveAssignmentPage(Model m, FunctionCapabilityAssignment assignment) {
+		restAPIService.saveFunctionCapabilityAssignment(assignment);
+		m.addAttribute("assignments", restAPIService.getFunctionCapabilityAssignments().getBody().getResult());
+		logger.info("Assignment saved successfully");
+		return "assignment/assignment";
+	}
+	
 	@GetMapping("/report")
 	public String getReportPage(Model m) {
 		return "report/report";

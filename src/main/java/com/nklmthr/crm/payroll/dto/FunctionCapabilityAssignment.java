@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -24,7 +23,10 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 	@Column
 	private WorkShift workShift;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
+	@Column
+	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
 	private EmployeeSalary employeeSalary;
 
@@ -64,6 +66,14 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 		this.functionCapability = functionCapabilityAssignment.getFunctionCapability();
 		this.employee = functionCapabilityAssignment.getEmployee();
 
+	}
+
+	public Integer getActualCapabilityAcheivedInPercent() {
+		return actualCapabilityAcheivedInPercent;
+	}
+
+	public void setActualCapabilityAcheivedInPercent(Integer actualCapabilityAcheivedInPercent) {
+		this.actualCapabilityAcheivedInPercent = actualCapabilityAcheivedInPercent;
 	}
 
 	public String getId() {

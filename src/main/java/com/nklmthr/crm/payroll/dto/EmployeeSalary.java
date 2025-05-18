@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -28,12 +27,8 @@ public class EmployeeSalary extends ResultDTO {
 	@JsonIgnore
 	private Employee employee;
 	
-	@OneToMany(mappedBy = "employeeSalary")
-	List<EmployeeSalaryPF> employeeSalaryPF;
-	
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "functionCapabilityAssignment", referencedColumnName = "employeeSalary")
-	private FunctionCapabilityAssignment functionCapabilityAssignment;
+	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "employeeSalary")
+	private List<FunctionCapabilityAssignment> functionCapabilityAssignments;
 	
 	
 	@Column
@@ -90,7 +85,5 @@ public class EmployeeSalary extends ResultDTO {
 	public void setSalary(BigDecimal salary) {
 		this.salary = salary;
 	}
-	
-	
 
 }
