@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -22,6 +23,18 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 	
 	@Column
 	private WorkShift workShift;
+	
+	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
+	private EmployeeSalary employeeSalary;
+
+	public EmployeeSalary getEmployeeSalary() {
+		return employeeSalary;
+	}
+
+	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
+		this.employeeSalary = employeeSalary;
+	}
 
 	public WorkShift getWorkShift() {
 		return workShift;

@@ -17,6 +17,7 @@
 	<div class="main-content">
 		<div class="dashboard-card">
 			<h2>Functions</h2>
+			<a th:href="@{/ui/function/add}" class="btn green">+ Add</a>
 			<table>
 				<thead>
 					<tr>
@@ -28,7 +29,7 @@
 					<tr th:each="func : ${functions}">
 						<td style="display: none" th:text="${func.id}"></td>
 						<td><a
-							th:href="@{function/{id}/function-capability(id=${func.id})}"
+							th:href="@{/ui/function/function-capability(functionId=${func.id})}"
 							th:text="${func.name}"></a></td>
 						<td class="actions">
 							<button>Edit</button>

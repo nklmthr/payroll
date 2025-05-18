@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nklmthr.crm.payroll.api.RestAPIService;
 import com.nklmthr.crm.payroll.dto.Employee;
+import com.nklmthr.crm.payroll.dto.Function;
+import com.nklmthr.crm.payroll.dto.FunctionCapability;
 
 @Controller
 @RequestMapping("/ui")
@@ -27,11 +30,6 @@ public class UIController {
 		return "login";
 	}
 
-//	
-//	@GetMapping("/logout")
-//	public String checkLoginPage(Model m) {
-//		return "/home";
-//	}
 	@GetMapping("/home")
 	public String getHomePage(Model m) {
 		return "home";
@@ -103,14 +101,44 @@ public class UIController {
 		m.addAttribute("functions", restAPIService.getFunctions().getBody().getResult());
 		return "function/function";
 	}
+	
+	@GetMapping("/function/add")
+	public String getAddFunctionPage(Model m) {
+		m.addAttribute("function", new Function());
+		return "function/addFunction";
+	}
+	
+	@PostMapping("/function/save")
+	public String getSaveFunctionPage(Model m, Function function) {
+		restAPIService.saveFunction(List.of(function));
+		m.addAttribute("functions", restAPIService.getFunctions().getBody().getResult());
+		logger.info("Function saved successfully");
+		return "function/function";
+	}
 
-	@GetMapping("/function/{functionId}/function-capability")
-	public String getfunctionCapabilityPage(Model m, @PathVariable("functionId") String functionId) {
+	@GetMapping("/function/function-capability")
+	public String getfunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId) {
 		m.addAttribute("functionCapabilities",
 				restAPIService.getFunctionCapabilities(functionId).getBody().getResult());
 		return "functionCapability/functionCapability";
 	}
 
+	@GetMapping("/function/function-capability/add")
+	public String getAddFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId) {
+		m.addAttribute("functionCapability", new FunctionCapability());
+		m.addAttribute("functionId", functionId);
+		return "functionCapability/addFunctionCapability";
+	}
+	@PostMapping("/function/function-capability/save")
+	public String getSaveFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
+			FunctionCapability functionCapability) {
+		restAPIService.saveFunctionCapability(functionId, functionCapability);
+		m.addAttribute("functionCapabilities",
+				restAPIService.getFunctionCapabilities(functionId).getBody().getResult());
+		logger.info("Function Capability saved successfully");
+		return "functionCapability/functionCapability";
+	}
+	
 	@GetMapping("/assignment")
 	public String getAssignmentPage(Model m) {
 		m.addAttribute("assignments", restAPIService.getFunctionCapabilityAssignments().getBody().getResult());

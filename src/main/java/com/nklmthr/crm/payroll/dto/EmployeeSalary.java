@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -29,6 +30,11 @@ public class EmployeeSalary extends ResultDTO {
 	
 	@OneToMany(mappedBy = "employeeSalary")
 	List<EmployeeSalaryPF> employeeSalaryPF;
+	
+	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "functionCapabilityAssignment", referencedColumnName = "employeeSalary")
+	private FunctionCapabilityAssignment functionCapabilityAssignment;
+	
 	
 	@Column
 	private LocalDate startDate;

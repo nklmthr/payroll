@@ -16,11 +16,13 @@
 	<div class="main-content">
 		<div class="dashboard-card">
 			<h2>Function Capabilities</h2>
+			<a th:href="@{/ui/function/function-capability/add (functionId=${param.functionId})}" class="btn green">+ Add</a>
 			<table>
 				<thead>
 					<tr>
 						<th>Start Date</th>
 						<th>End Date</th>
+						<th>Function</th>
 						<th>Capability</th>
 						<th>Actions</th>
 					</tr>
@@ -30,6 +32,7 @@
 						<td style="display: none" th:text="${fcb.id}"></td>
 						<td th:text="${fcb.startDate}"></td>
 						<td th:text="${fcb.endDate}"></td>
+						<td th:text="${fcb.function.name}"></td>
 						<td th:text="${fcb.capability}"></td>
 						<td class="actions">
 							<button>Edit</button>
