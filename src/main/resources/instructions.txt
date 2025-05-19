@@ -1,0 +1,36 @@
+
+mvn clean package spring-boot:repackage
+
+ec2-3-109-54-110.ap-south-1.compute.amazonaws.com
+
+cd /home/ec2-user/app/
+
+java -jar -Dserver.port=8000 MyCRMApp.jar
+
+
+ssh -i /Users/i344377/Downloads/sarla-estate-keypair.pem ec2-user@ec2-user@ec2-3-109-54-110.ap-south-1.compute.amazonaws.com
+
+scp -i /Users/i344377/Downloads/sarla-estate-keypair.pem /Users/i344377/SAPDevelop/nklmthr/github/payroll/target/MyCRMApp.jar ec2-user@ec2-3-109-54-110.ap-south-1.compute.amazonaws.com:app
+
+my-app.service
+[Unit]
+Description=Java Service
+
+[Service]
+User=ec2-user
+# The configuration file application.properties should be here:
+WorkingDirectory=/home/ec2-user/app 
+ExecStart=/usr/bin/java -Xmx256m -jar /home/ec2-user/app/MyCRMApp.jar --server.port=8000
+SuccessExitStatus=143
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+_________________________________
+sudo systemctl daemon-reload
+sudo systemctl enable --now my-app
+sudo systemctl status my-app.service
+
+ sudo systemctl status my-app.service
