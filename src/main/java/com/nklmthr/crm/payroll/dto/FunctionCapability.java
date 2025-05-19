@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class FunctionCapability extends ResultDTO {
+public class FunctionCapability {
 
 	@Id
 	private String id;
@@ -32,10 +32,6 @@ public class FunctionCapability extends ResultDTO {
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Function", referencedColumnName = "id")
 	private Function function;
-
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "ReportingPillar", referencedColumnName = "id")
-	private ReportingPillar reportingPillar;
 
 	@PrePersist
 	protected void generateIdIfMissing() {
@@ -84,20 +80,11 @@ public class FunctionCapability extends ResultDTO {
 		this.function = function;
 	}
 
-	public ReportingPillar getReportingPillar() {
-		return reportingPillar;
-	}
-
-	public void setReportingPillar(ReportingPillar reportingPillar) {
-		this.reportingPillar = reportingPillar;
-	}
 
 	public void update(FunctionCapability functionCapability) {
 		this.startDate = functionCapability.getStartDate();
 		this.endDate = functionCapability.getEndDate();
 		this.capability = functionCapability.getCapability();
-		this.function = functionCapability.getFunction();
-		this.reportingPillar = functionCapability.getReportingPillar();
 
 	}
 

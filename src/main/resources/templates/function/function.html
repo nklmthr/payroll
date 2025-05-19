@@ -31,9 +31,10 @@
 						<td><a
 							th:href="@{/ui/function/function-capability(functionId=${func.id})}"
 							th:text="${func.name}"></a></td>
-						<td class="actions">
-							<button>Edit</button>
-							<button class="delete">Delete</button>
+						<td class="actions"><a class="btn blue"
+							th:href="@{/ui/function/edit (functionId=${func.id})}">Edit</a> <a
+							class="btn red"
+							th:href="@{/ui/function/delete (functionId=${func.id})}">Delete</a>
 						</td>
 					</tr>
 				</tbody>

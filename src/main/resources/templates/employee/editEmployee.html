@@ -21,7 +21,7 @@
 
 			<h2>Edit Employee</h2>
 			<span th:text="${error}" class="error-message"></span>
-			<form th:action="@{/ui/employee/{id}/update (id=${employee.id})}"
+			<form th:action="@{/ui/employee/update (employeeId=${employee.id})}"
 				method="post" th:object="${employee}">
 				<table>
 					<tr>
@@ -30,23 +30,25 @@
 					</tr>
 
 					<tr>
-						<td><label for="firstName">First Name</label> <input
-							type="text" th:field="*{firstName}" required /></td>
-						<td><label for="middleName">Middle Name</label> <input
-							type="text" th:field="*{middleName}" /></td>
-						<td><label for="lastName">Last Name</label> <input
-							type="text" th:field="*{lastName}" /></td>
+						<td>First Name</td>
+						<td><input type="text" th:field="*{firstName}" required /></td>
+						<td>Middle Name</td>
+						<td><input type="text" th:field="*{middleName}" /></td>
+						<td>Last Name</td>
+						<td><input type="text" th:field="*{lastName}" /></td>
 					</tr>
 					<tr>
-						<td><label for="identity">Identity Card Number</label> <input
-							type="text" th:field="*{identity}" /></td>
-						<td colspan="2"><label for="mobile">Phone</label> <input
-							type="text" th:field="*{mobile}" /></td>
+						<td>Identity Card Number</td>
+						<td colspan="3"><input type="text" th:field="*{identity}" /></td>
+						<td>Phone</td>
+						<td><input type="text" th:field="*{mobile}" /></td>
 					</tr>
 				</table>
 
 				<div class="form-actions">
 					<button type="submit" class="btn green">Save</button>
+					<a class="btn blue"
+							th:href="@{/ui/employee}">Back</a>
 				</div>
 			</form>
 		</div>

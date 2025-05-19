@@ -22,11 +22,13 @@
 					<td>
 						<h3
 							th:text="${employee.firstName} + ' '+ ${employee.middleName} +' ' + ${employee.lastName}">
-						th:text="${employee.Mobile}"></h3>
+						</h3>
 					</td>
 				</tr>
 			</table>
-			<a th:href="@{/ui/employee/salary/add (employeeId=${param.employeeId})}" class="btn green">+ Add</a>
+			<a
+				th:href="@{/ui/employee/salary/add (employeeId=${param.employeeId})}"
+				class="btn green">+ Add</a>
 			<table>
 				<thead>
 					<tr>
@@ -43,14 +45,16 @@
 						<td th:text="${empSal.endDate}"></td>
 						<td th:text="${empSal.salary}"></td>
 						<td class="actions"><a
-							th:href="@{/ui/employeeSalary/{id}/edit (id=${empSal.id})}"
+							th:href="@{/ui/employee/salary/edit (employeeId=${empSal.employee.id}, employeeSalaryId=${empSal.id})}"
 							class="btn blue">Edit</a> <a
-							th:href="@{/ui/employee/{id}/delete (id=${empSal.id})}"
-							class="btn blue">Delete</a></td>
+							th:href="@{/ui/employee/salary/delete (employeeId=${empSal.employee.id}, employeeSalaryId=${empSal.id})}"
+							class="btn red">Delete</a></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+		<a class="btn blue"
+							th:href="@{/ui/employee}">Back</a>
 	</div>
 
 </body>

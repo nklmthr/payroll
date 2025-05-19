@@ -16,22 +16,22 @@
 	<!-- Main Content -->
 	<div class="main-content">
 		<div class="dashboard-card">
-			<h2>Add New Salary</h2>
+			<h2>Edit Daily Wages</h2>
 			<h3
 				th:text="${employee.firstName} + ' '+ ${employee.middleName} +' ' + ${employee.lastName}">
 			</h3>
 			<form
-				th:action="@{/ui/employee/salary/save (employeeId=${param.employeeId})}"
+				th:action="@{/ui/employee/salary/update (employeeId=${param.employeeId}, employeeSalaryId=${employeeSalary.id})}"
 				method="post" th:object="${employeeSalary}">
 				<table>
 					<tr>
 						<td>Start Date</td>
-						<td><input name="startDate" type="date"
+						<td><input name="startDate" type="date" 
 							th:value="*{startDate}" required /></td>
 						<td>End Date</td>
 						<td><input name="endDate" type="date" th:value="*{endDate}" /></td>
-						<td>Daily Wage (INR)</td>
-						<td><input type="text" th:field="*{salary}" /></td>
+						<td>>Daily Wage (INR)</td>
+						<td><input name="salary" type="text" th:value="*{salary}" /></td>
 					</tr>
 
 				</table>

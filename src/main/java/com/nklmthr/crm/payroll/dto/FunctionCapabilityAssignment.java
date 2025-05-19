@@ -1,10 +1,8 @@
 package com.nklmthr.crm.payroll.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,12 +11,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class FunctionCapabilityAssignment extends ResultDTO {
+public class FunctionCapabilityAssignment {
 
 	@Id
 	private String id;
@@ -58,7 +55,9 @@ public class FunctionCapabilityAssignment extends ResultDTO {
 	public void update(FunctionCapabilityAssignment functionCapabilityAssignment) {
 		this.date = functionCapabilityAssignment.getDate();
 		this.functionCapability = functionCapabilityAssignment.getFunctionCapability();
+		this.workShift = functionCapabilityAssignment.getWorkShift();
 		this.employee = functionCapabilityAssignment.getEmployee();
+		this.actualCapabilityAcheivedInPercent = functionCapabilityAssignment.getActualCapabilityAcheivedInPercent();
 
 	}
 

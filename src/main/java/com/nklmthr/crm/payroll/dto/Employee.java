@@ -14,7 +14,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Transient;
 
 @Entity
-public class Employee extends ResultDTO {
+public class Employee {
 	@Id
 	private String id;
 

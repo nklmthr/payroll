@@ -39,11 +39,10 @@
 						<td th:text="${asg.employee.identity}"></td>
 						<td><input type="number" maxlength="3" size="3"
 							th:value="${asg.actualCapabilityAcheivedInPercent}" />%</td>
-						<td class="actions">
-							<button class="btn.green">Close 100%</button>
-							<button class="blue">Edit</button>
-							<button class="delete">Delete</button>
-
+						<td class="actions"><a class="btn blue"
+							th:href="@{/ui/assignment/edit (assignmentId=${asg.id})}">Edit</a> <a
+							class="btn red"
+							th:href="@{/ui/assignment/delete (assignmentId=${asg.id})}">Delete</a>
 						</td>
 					</tr>
 				</tbody>

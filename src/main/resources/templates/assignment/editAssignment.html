@@ -16,8 +16,8 @@
 	<!-- Main Content -->
 	<div class="main-content">
 		<div class="dashboard-card">
-			<h2>Add New Assignment</h2>
-			<form th:action="@{/ui/assignment/save}" method="post"
+			<h2>Edit Assignment</h2>
+			<form th:action="@{/ui/assignment/update (assignmentId=${param.assignmentId})}" method="post"
 				th:object="${assignment}">
 				<table>
 					<tr>

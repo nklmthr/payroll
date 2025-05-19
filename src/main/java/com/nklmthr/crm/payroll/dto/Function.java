@@ -14,7 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class Function extends ResultDTO {
+public class Function {
 	@Id
 	private String id;
 

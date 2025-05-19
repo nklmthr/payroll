@@ -2,7 +2,6 @@ package com.nklmthr.crm.payroll.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -13,13 +12,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class EmployeeSalary extends ResultDTO {
+public class EmployeeSalary {
 
 	@Id
 	private String id;
@@ -89,6 +86,12 @@ public class EmployeeSalary extends ResultDTO {
 	public String toString() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.toJson(this);
+	}
+
+	public void update(EmployeeSalary employeeSalary) {
+		this.startDate = employeeSalary.getStartDate();
+		this.endDate = employeeSalary.getEndDate();
+		this.salary = employeeSalary.getSalary();
 	}
 
 }

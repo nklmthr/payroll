@@ -3,7 +3,7 @@ package com.nklmthr.crm.payroll.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Report extends ResultDTO {
+public class Report {
 	private String functionName;
 	private String capabilty;
 	private LocalDate date;
