@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
+import com.nklmthr.crm.payroll.dto.Assignment;
 import com.nklmthr.crm.payroll.dto.Report;
 import com.nklmthr.crm.payroll.service.AssignmentService;
 
@@ -27,13 +27,13 @@ public class ReportUiController {
 	public String getReport(Model m) {
 		logger.info("Report page accessed");
 		List<Report> reports = new ArrayList<>();
-		List<FunctionCapabilityAssignment> assignments = assignmentService.getFunctionCapabilityAssignments();
+		List<Assignment> assignments = assignmentService.getFunctionCapabilityAssignments();
 		if (assignments == null || assignments.isEmpty()) {
-			logger.info("No Function Capability Assignments found");
+			logger.info("No Operation Capability Assignments found");
 			return "report/report";
 		}
 		Report report = new Report();
-		for (FunctionCapabilityAssignment assignment : assignments) {
+		for (Assignment assignment : assignments) {
 			if (assignment.getDate().isEqual(LocalDate.now())) {
 				report.setFunctionName(assignment.getFunctionCapability().getFunction().getName());
 				report.setCapabilty(assignment.getFunctionCapability().getCapability());

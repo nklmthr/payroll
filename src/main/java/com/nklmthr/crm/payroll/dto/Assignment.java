@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class FunctionCapabilityAssignment {
+public class Assignment {
 
 	@Id
 	private String id;
@@ -38,8 +38,8 @@ public class FunctionCapabilityAssignment {
 	}
 
 	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "FunctionCapability", referencedColumnName = "id")
-	private FunctionCapability functionCapability;
+	@JoinColumn(name = "OperationProficiency", referencedColumnName = "id")
+	private OperationProficiency operationProficiency;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Employee", referencedColumnName = "id")
@@ -52,12 +52,12 @@ public class FunctionCapabilityAssignment {
 		}
 	}
 
-	public void update(FunctionCapabilityAssignment functionCapabilityAssignment) {
-		this.date = functionCapabilityAssignment.getDate();
-		this.functionCapability = functionCapabilityAssignment.getFunctionCapability();
-		this.workShift = functionCapabilityAssignment.getWorkShift();
-		this.employee = functionCapabilityAssignment.getEmployee();
-		this.actualCapabilityAcheivedInPercent = functionCapabilityAssignment.getActualCapabilityAcheivedInPercent();
+	public void update(Assignment assignment) {
+		this.date = assignment.getDate();
+		this.operationProficiency = assignment.getFunctionCapability();
+		this.workShift = assignment.getWorkShift();
+		this.employee = assignment.getEmployee();
+		this.actualCapabilityAcheivedInPercent = assignment.getActualCapabilityAcheivedInPercent();
 
 	}
 
@@ -85,12 +85,12 @@ public class FunctionCapabilityAssignment {
 		this.date = date;
 	}
 
-	public FunctionCapability getFunctionCapability() {
-		return functionCapability;
+	public OperationProficiency getFunctionCapability() {
+		return operationProficiency;
 	}
 
-	public void setFunctionCapability(FunctionCapability functionCapability) {
-		this.functionCapability = functionCapability;
+	public void setFunctionCapability(OperationProficiency operationProficiency) {
+		this.operationProficiency = operationProficiency;
 	}
 
 	public Employee getEmployee() {

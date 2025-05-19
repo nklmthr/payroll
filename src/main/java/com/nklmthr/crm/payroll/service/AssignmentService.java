@@ -11,7 +11,7 @@ import com.nklmthr.crm.payroll.dao.EmployeePaymentRepository;
 import com.nklmthr.crm.payroll.dao.FunctionCapabilityAssignmentRepository;
 import com.nklmthr.crm.payroll.dto.EmployeePayment;
 import com.nklmthr.crm.payroll.dto.EmployeeSalary;
-import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
+import com.nklmthr.crm.payroll.dto.Assignment;
 
 @Service
 public class AssignmentService {
@@ -23,31 +23,31 @@ public class AssignmentService {
 	@Autowired
 	private EmployeePaymentRepository paymentRepository;
 
-	public List<FunctionCapabilityAssignment> getFunctionCapabilityAssignments() {
-		List<FunctionCapabilityAssignment> functionCapabilityAssignments = functionCapabilityAssignmentRepository
+	public List<Assignment> getFunctionCapabilityAssignments() {
+		List<Assignment> assignments = functionCapabilityAssignmentRepository
 				.findAll();
-		if (!functionCapabilityAssignments.isEmpty()) {
-			logger.info("Function Capability Assignments: " + functionCapabilityAssignments.size());
-			return functionCapabilityAssignments;
+		if (!assignments.isEmpty()) {
+			logger.info("Operation Capability Assignments: " + assignments.size());
+			return assignments;
 		}
-		logger.info("No Function Capability Assignments found");
+		logger.info("No Operation Capability Assignments found");
 		return null;
 	}
 	
-	public FunctionCapabilityAssignment getFunctionCapabilityAssignment(String id) {
-		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
+	public Assignment getFunctionCapabilityAssignment(String id) {
+		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
 				.findById(id);
 		if (functionCapabilityAssignmentOpt.isPresent()) {
-			logger.info("Function Capability Assignment found with ID: " + id);
+			logger.info("Operation Capability Assignment found with ID: " + id);
 			return functionCapabilityAssignmentOpt.get();
 		}
-		logger.info("No Function Capability Assignment found with ID: " + id);
+		logger.info("No Operation Capability Assignment found with ID: " + id);
 		return null;
 	}
 
-	public FunctionCapabilityAssignment saveFunctionCapabilityAssignment(
-			FunctionCapabilityAssignment functionCapabilityAssignment) {
-		FunctionCapabilityAssignment asg = functionCapabilityAssignmentRepository.save(functionCapabilityAssignment);
+	public Assignment saveFunctionCapabilityAssignment(
+			Assignment assignment) {
+		Assignment asg = functionCapabilityAssignmentRepository.save(assignment);
 		EmployeeSalary salary = asg.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
 				.findFirst().get();
 		EmployeePayment payment = new EmployeePayment();
@@ -64,13 +64,13 @@ public class AssignmentService {
 
 	}
 
-	public FunctionCapabilityAssignment updateFunctionCapabilityAssignment(
-			String assignmentId, FunctionCapabilityAssignment functionCapabilityAssignment) {
-		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
+	public Assignment updateFunctionCapabilityAssignment(
+			String assignmentId, Assignment assignment) {
+		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
 				.findById(assignmentId);
 		if (functionCapabilityAssignmentOpt.isPresent()) {
-			FunctionCapabilityAssignment functionCapabilityAssignment1 = functionCapabilityAssignmentOpt.get();
-			functionCapabilityAssignment1.update(functionCapabilityAssignment);
+			Assignment functionCapabilityAssignment1 = functionCapabilityAssignmentOpt.get();
+			functionCapabilityAssignment1.update(assignment);
 			functionCapabilityAssignmentRepository.save(functionCapabilityAssignment1);
 			return functionCapabilityAssignment1;
 		}
@@ -78,13 +78,13 @@ public class AssignmentService {
 	}
 
 	public void deleteFunctionCapabilityAssignment(String assignmentId) {
-		Optional<FunctionCapabilityAssignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
+		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
 				.findById(assignmentId);
 		if (functionCapabilityAssignmentOpt.isPresent()) {
 			functionCapabilityAssignmentRepository.delete(functionCapabilityAssignmentOpt.get());
-			logger.info("Function Capability Assignment deleted with ID: " + assignmentId);
+			logger.info("Operation Capability Assignment deleted with ID: " + assignmentId);
 		} else {
-			logger.info("No Function Capability Assignment found with ID: " + assignmentId);
+			logger.info("No Operation Capability Assignment found with ID: " + assignmentId);
 		}
 	}
 }

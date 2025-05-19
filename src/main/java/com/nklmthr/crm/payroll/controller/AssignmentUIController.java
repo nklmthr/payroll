@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nklmthr.crm.payroll.dto.FunctionCapabilityAssignment;
+import com.nklmthr.crm.payroll.dto.Assignment;
 import com.nklmthr.crm.payroll.dto.WorkShift;
 import com.nklmthr.crm.payroll.service.AssignmentService;
 import com.nklmthr.crm.payroll.service.EmployeeService;
@@ -38,7 +38,7 @@ public class AssignmentUIController {
 
 	@GetMapping("/assignment/add")
 	public String getAddAssignmentPage(Model m) {
-		FunctionCapabilityAssignment assignment = new FunctionCapabilityAssignment();
+		Assignment assignment = new Assignment();
 		assignment.setDate(java.time.LocalDate.now());
 		m.addAttribute("assignment", assignment);
 		m.addAttribute("employees", employeeService.getEmployees());
@@ -48,7 +48,7 @@ public class AssignmentUIController {
 	}
 
 	@PostMapping("/assignment/save")
-	public String getSaveAssignmentPage(Model m, FunctionCapabilityAssignment assignment) {
+	public String getSaveAssignmentPage(Model m, Assignment assignment) {
 		assignmentService.saveFunctionCapabilityAssignment(assignment);
 		logger.info("Assignment saved successfully");
 		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
@@ -66,7 +66,7 @@ public class AssignmentUIController {
 
 	@PostMapping("/assignment/update")
 	public String getUpdateAssignmentPage(Model m, @RequestParam("assignmentId") String assignmentId,
-			FunctionCapabilityAssignment assignment) {
+			Assignment assignment) {
 		assignmentService.updateFunctionCapabilityAssignment(assignmentId, assignment);
 		logger.info("Assignment updated successfully");
 		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());

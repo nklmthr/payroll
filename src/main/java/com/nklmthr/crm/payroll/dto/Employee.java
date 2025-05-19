@@ -48,7 +48,7 @@ public class Employee {
 	private List<EmployeePayment> employeePayments;
 
 	@OneToMany(mappedBy = "employee")
-	private List<FunctionCapabilityAssignment> functionCapabilityAssignments;
+	private List<Assignment> assignments;
 	
 	@PrePersist
 	protected void generateIdIfMissing() {
@@ -113,12 +113,12 @@ public class Employee {
 		this.employeePayments = employeePayments;
 	}
 
-	public List<FunctionCapabilityAssignment> getFunctionCapabilityAssignments() {
-		return functionCapabilityAssignments;
+	public List<Assignment> getFunctionCapabilityAssignments() {
+		return assignments;
 	}
 
-	public void setFunctionCapabilityAssignments(List<FunctionCapabilityAssignment> functionCapabilityAssignments) {
-		this.functionCapabilityAssignments = functionCapabilityAssignments;
+	public void setFunctionCapabilityAssignments(List<Assignment> assignments) {
+		this.assignments = assignments;
 	}
 
 	public void update(Employee employee) {

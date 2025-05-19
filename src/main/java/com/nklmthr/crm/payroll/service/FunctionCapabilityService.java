@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.nklmthr.crm.payroll.dao.FunctionCapabilityRepository;
 import com.nklmthr.crm.payroll.dao.FunctionRepository;
-import com.nklmthr.crm.payroll.dto.Function;
-import com.nklmthr.crm.payroll.dto.FunctionCapability;
+import com.nklmthr.crm.payroll.dto.Operation;
+import com.nklmthr.crm.payroll.dto.OperationProficiency;
 
 @Service
 public class FunctionCapabilityService {
@@ -22,31 +22,31 @@ public class FunctionCapabilityService {
 	@Autowired
 	private FunctionCapabilityRepository functionCapabilityRepository;
 
-	public List<Function> getFunctions() {
-		List<Function> functions = functionRepository.findAll();
-		logger.info("Functions: " + functions.size());
-		return functions;
+	public List<Operation> getFunctions() {
+		List<Operation> operations = functionRepository.findAll();
+		logger.info("Functions: " + operations.size());
+		return operations;
 	}
 
-	public Function getFunctionById(String functionId) {
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			return function.get();
+	public Operation getFunctionById(String functionId) {
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			return operation.get();
 		}
 		return null;
 	}
 
-	public Function saveFunction(Function function) {
-		Function func = functionRepository.save(function);
+	public Operation saveFunction(Operation operation) {
+		Operation func = functionRepository.save(operation);
 		return func;
 
 	}
 
-	public Function updateFunction(String functionId, Function function) {
-		Optional<Function> func = functionRepository.findById(functionId);
+	public Operation updateFunction(String functionId, Operation operation) {
+		Optional<Operation> func = functionRepository.findById(functionId);
 		if (func.isPresent()) {
-			Function func1 = func.get();
-			func1.update(function);
+			Operation func1 = func.get();
+			func1.update(operation);
 			functionRepository.save(func1);
 			return func1;
 		}
@@ -58,54 +58,54 @@ public class FunctionCapabilityService {
 		functionRepository.deleteById(functionId);
 	}
 
-	public List<FunctionCapability> getFunctionCapabilities(String functionId) {
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			List<FunctionCapability> functionCapabilities = function.get().getFunctionCapabilities();
-			if (functionCapabilities.isEmpty()) {
-				logger.info("Function Capability Assignment not found for functionId:" + functionId);
+	public List<OperationProficiency> getFunctionCapabilities(String functionId) {
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			List<OperationProficiency> operationProficiencies = operation.get().getFunctionCapabilities();
+			if (operationProficiencies.isEmpty()) {
+				logger.info("Operation Capability Assignment not found for functionId:" + functionId);
 				return null;
 			} else {
-				logger.info("Function Capability Assignment found for functionId:" + functionId);
-				return functionCapabilities;
+				logger.info("Operation Capability Assignment found for functionId:" + functionId);
+				return operationProficiencies;
 			}
 		}
 		return null;
 	}
 
-	public FunctionCapability getFunctionCapabilityById(String functionId, String capabilityId) {
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			Optional<FunctionCapability> functionCapability = functionCapabilityRepository.findById(capabilityId);
-			if (functionCapability.isPresent()) {
-				return functionCapability.get();
+	public OperationProficiency getFunctionCapabilityById(String functionId, String capabilityId) {
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			Optional<OperationProficiency> operationProficiency = functionCapabilityRepository.findById(capabilityId);
+			if (operationProficiency.isPresent()) {
+				return operationProficiency.get();
 			}
 		}
 		return null;
 	}
 
-	public FunctionCapability saveFunctionCapability(String functionId, FunctionCapability functionCapability) {
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			functionCapability.setFunction(function.get());
-			functionCapabilityRepository.save(functionCapability);
-			return functionCapability;
+	public OperationProficiency saveFunctionCapability(String functionId, OperationProficiency operationProficiency) {
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			operationProficiency.setFunction(operation.get());
+			functionCapabilityRepository.save(operationProficiency);
+			return operationProficiency;
 		}
 		return null;
 	}
 
-	public FunctionCapability updateFunctionCapability(String functionId, String functionCapabilityId,
-			FunctionCapability functionCapability) {
+	public OperationProficiency updateFunctionCapability(String functionId, String functionCapabilityId,
+			OperationProficiency operationProficiency) {
 		logger.info("Updating function capability with ID: " + functionCapabilityId);
-		logger.info("Function ID: " + functionId);
-		logger.info("Function Capability: " + functionCapability);
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			Optional<FunctionCapability> funcCapability = functionCapabilityRepository
+		logger.info("Operation ID: " + functionId);
+		logger.info("Operation Capability: " + operationProficiency);
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			Optional<OperationProficiency> funcCapability = functionCapabilityRepository
 					.findById(functionCapabilityId);
 			if (funcCapability.isPresent()) {
-				FunctionCapability funcCapability1 = funcCapability.get();
-				funcCapability1.update(functionCapability);
+				OperationProficiency funcCapability1 = funcCapability.get();
+				funcCapability1.update(operationProficiency);
 				functionCapabilityRepository.save(funcCapability1);
 				return funcCapability1;
 			}
@@ -113,20 +113,20 @@ public class FunctionCapabilityService {
 		return null;
 	}
 
-	public List<FunctionCapability> getAllFunctionCapabilities() {
-		List<FunctionCapability> functionCapabilities = functionCapabilityRepository.findAll();
-		logger.info("Function Capabilities: " + functionCapabilities.size());
-		return functionCapabilities;
+	public List<OperationProficiency> getAllFunctionCapabilities() {
+		List<OperationProficiency> operationProficiencies = functionCapabilityRepository.findAll();
+		logger.info("Operation Capabilities: " + operationProficiencies.size());
+		return operationProficiencies;
 	}
 
 	public void deleteFunctionCapability(String functionId, String functionCapabilityId) {
-		Optional<Function> function = functionRepository.findById(functionId);
-		if (function.isPresent()) {
-			Optional<FunctionCapability> functionCapability = functionCapabilityRepository
+		Optional<Operation> operation = functionRepository.findById(functionId);
+		if (operation.isPresent()) {
+			Optional<OperationProficiency> operationProficiency = functionCapabilityRepository
 					.findById(functionCapabilityId);
-			if (functionCapability.isPresent()) {
-				functionCapabilityRepository.delete(functionCapability.get());
-				logger.info("Function Capability Assignment deleted for functionId:" + functionId + ", capabilityId:"
+			if (operationProficiency.isPresent()) {
+				functionCapabilityRepository.delete(operationProficiency.get());
+				logger.info("Operation Capability Assignment deleted for functionId:" + functionId + ", capabilityId:"
 						+ functionCapabilityId);
 			}
 		}

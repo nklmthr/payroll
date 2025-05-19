@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nklmthr.crm.payroll.dto.Function;
-import com.nklmthr.crm.payroll.dto.FunctionCapability;
+import com.nklmthr.crm.payroll.dto.Operation;
+import com.nklmthr.crm.payroll.dto.OperationProficiency;
 import com.nklmthr.crm.payroll.service.FunctionCapabilityService;
 
 @Controller
@@ -33,31 +33,31 @@ public class FunctionUIController {
 
 	@GetMapping("/function/add")
 	public String getAddFunctionPage(Model m) {
-		m.addAttribute("function", new Function());
+		m.addAttribute("function", new Operation());
 		return "function/addFunction";
 	}
 
 	@PostMapping("/function/save")
-	public String getSaveFunctionPage(Model m, Function function) {
-		functionCapabilityService.saveFunction(function);
-		logger.info("Function saved successfully");
+	public String getSaveFunctionPage(Model m, Operation operation) {
+		functionCapabilityService.saveFunction(operation);
+		logger.info("Operation saved successfully");
 		m.addAttribute("functions", functionCapabilityService.getFunctions());
-		logger.info("Function saved successfully");
+		logger.info("Operation saved successfully");
 		return "function/function";
 	}
 	
 	@GetMapping("/function/edit")
 	public String getEditFunctionPage(Model m, @RequestParam("functionId") String functionId) {
-		Function function = functionCapabilityService.getFunctionById(functionId);
-		m.addAttribute("function", function);
-		logger.info("Function fetched successfully");
+		Operation operation = functionCapabilityService.getFunctionById(functionId);
+		m.addAttribute("function", operation);
+		logger.info("Operation fetched successfully");
 		return "function/editFunction";
 	}
 	
 	@PostMapping("/function/update")
-	public String getUpdateFunctionPage(Model m, @RequestParam("functionId") String functionId, Function function) {
-		functionCapabilityService.updateFunction(functionId, function);
-		logger.info("Function updated successfully");
+	public String getUpdateFunctionPage(Model m, @RequestParam("functionId") String functionId, Operation operation) {
+		functionCapabilityService.updateFunction(functionId, operation);
+		logger.info("Operation updated successfully");
 		m.addAttribute("functions", functionCapabilityService.getFunctions());
 		return "function/function";
 	}
@@ -65,7 +65,7 @@ public class FunctionUIController {
 	@GetMapping("/function/delete")
 	public String getDeleteFunctionPage(Model m, @RequestParam("functionId") String functionId) {
 		functionCapabilityService.deleteFunction(functionId);
-		logger.info("Function deleted successfully");
+		logger.info("Operation deleted successfully");
 		m.addAttribute("functions", functionCapabilityService.getFunctions());
 		return "function/function";
 	}
@@ -78,42 +78,42 @@ public class FunctionUIController {
 
 	@GetMapping("/function/function-capability/add")
 	public String getAddFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId) {
-		FunctionCapability functionCapability = new FunctionCapability();
-		functionCapability.setStartDate(LocalDate.now().withDayOfMonth(1));
-		functionCapability.setEndDate(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
-		m.addAttribute("functionCapability", functionCapability);
+		OperationProficiency operationProficiency = new OperationProficiency();
+		operationProficiency.setStartDate(LocalDate.now().withDayOfMonth(1));
+		operationProficiency.setEndDate(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
+		m.addAttribute("functionCapability", operationProficiency);
 		m.addAttribute("functionId", functionId);
 		return "functionCapability/addFunctionCapability";
 	}
 
 	@PostMapping("/function/function-capability/save")
 	public String getSaveFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
-			FunctionCapability functionCapability) {
-		functionCapabilityService.saveFunctionCapability(functionId, functionCapability);
+			OperationProficiency operationProficiency) {
+		functionCapabilityService.saveFunctionCapability(functionId, operationProficiency);
 		m.addAttribute("functionCapabilities", functionCapabilityService.getFunctionCapabilities(functionId));
-		logger.info("Function Capability saved successfully");
+		logger.info("Operation Capability saved successfully");
 		return "functionCapability/functionCapability";
 	}
 	@GetMapping("/function/function-capability/edit")
 	public String getEditFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
 			@RequestParam("functionCapabilityId") String functionCapabilityId) {
-		FunctionCapability functionCapability = functionCapabilityService.getFunctionCapabilityById(functionId,
+		OperationProficiency operationProficiency = functionCapabilityService.getFunctionCapabilityById(functionId,
 				functionCapabilityId);
-		m.addAttribute("functionCapability", functionCapability);
+		m.addAttribute("functionCapability", operationProficiency);
 		m.addAttribute("functionId", functionId);
-		logger.info("Function Capability fetched successfully");
+		logger.info("Operation Capability fetched successfully");
 		return "functionCapability/editFunctionCapability";
 	}
 	@PostMapping("/function/function-capability/update")
 	public String getUpdateFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
-			@RequestParam("functionCapabilityId") String functionCapabilityId, FunctionCapability functionCapability) {
-		logger.info("Function Capability ID: " + functionCapability.getId());
-		logger.info("Function Capability Start Date: " + functionCapability.getStartDate());
-		logger.info("Function Capability End Date: " + functionCapability.getEndDate());
-		logger.info("Function Capability: " + functionCapability.getCapability());
+			@RequestParam("functionCapabilityId") String functionCapabilityId, OperationProficiency operationProficiency) {
+		logger.info("Operation Capability ID: " + operationProficiency.getId());
+		logger.info("Operation Capability Start Date: " + operationProficiency.getStartDate());
+		logger.info("Operation Capability End Date: " + operationProficiency.getEndDate());
+		logger.info("Operation Capability: " + operationProficiency.getCapability());
 		
-		functionCapabilityService.updateFunctionCapability(functionId, functionCapabilityId, functionCapability);
-		logger.info("Function Capability updated successfully");
+		functionCapabilityService.updateFunctionCapability(functionId, functionCapabilityId, operationProficiency);
+		logger.info("Operation Capability updated successfully");
 		m.addAttribute("functionCapabilities", functionCapabilityService.getFunctionCapabilities(functionId));
 		return "functionCapability/functionCapability";
 	}
@@ -122,7 +122,7 @@ public class FunctionUIController {
 	public String getDeleteFunctionCapabilityPage(Model m, @RequestParam("functionId") String functionId,
 			@RequestParam("functionCapabilityId") String functionCapabilityId) {
 		functionCapabilityService.deleteFunctionCapability(functionId, functionCapabilityId);
-		logger.info("Function Capability deleted successfully");
+		logger.info("Operation Capability deleted successfully");
 		m.addAttribute("functionCapabilities", functionCapabilityService.getFunctionCapabilities(functionId));
 		return "functionCapability/functionCapability";
 	}

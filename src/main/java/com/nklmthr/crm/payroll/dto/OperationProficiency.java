@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class FunctionCapability {
+public class OperationProficiency {
 
 	@Id
 	private String id;
@@ -30,8 +30,8 @@ public class FunctionCapability {
 	private String capability;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "Function", referencedColumnName = "id")
-	private Function function;
+	@JoinColumn(name = "Operation", referencedColumnName = "id")
+	private Operation operation;
 
 	@PrePersist
 	protected void generateIdIfMissing() {
@@ -72,19 +72,19 @@ public class FunctionCapability {
 		this.capability = capability;
 	}
 
-	public Function getFunction() {
-		return function;
+	public Operation getFunction() {
+		return operation;
 	}
 
-	public void setFunction(Function function) {
-		this.function = function;
+	public void setFunction(Operation operation) {
+		this.operation = operation;
 	}
 
 
-	public void update(FunctionCapability functionCapability) {
-		this.startDate = functionCapability.getStartDate();
-		this.endDate = functionCapability.getEndDate();
-		this.capability = functionCapability.getCapability();
+	public void update(OperationProficiency operationProficiency) {
+		this.startDate = operationProficiency.getStartDate();
+		this.endDate = operationProficiency.getEndDate();
+		this.capability = operationProficiency.getCapability();
 
 	}
 

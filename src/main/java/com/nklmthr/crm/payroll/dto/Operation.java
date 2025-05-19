@@ -14,16 +14,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
-public class Function {
+public class Operation {
 	@Id
 	private String id;
 
 	@Column
 	private String name;
 
-	@OneToMany(mappedBy = "function")
+	@OneToMany(mappedBy = "operation")
 	@JsonIgnore
-	private List<FunctionCapability> functionCapabilities;
+	private List<OperationProficiency> operationProficiencies;
 
 	@PrePersist
 	protected void generateIdIfMissing() {
@@ -32,8 +32,8 @@ public class Function {
 		}
 	}
 
-	public void update(Function function) {
-		this.name = function.getName();
+	public void update(Operation operation) {
+		this.name = operation.getName();
 
 	}
 
@@ -53,12 +53,12 @@ public class Function {
 		this.name = name;
 	}
 
-	public List<FunctionCapability> getFunctionCapabilities() {
-		return functionCapabilities;
+	public List<OperationProficiency> getFunctionCapabilities() {
+		return operationProficiencies;
 	}
 
-	public void setFunctionCapabilities(List<FunctionCapability> functionCapabilities) {
-		this.functionCapabilities = functionCapabilities;
+	public void setFunctionCapabilities(List<OperationProficiency> operationProficiencies) {
+		this.operationProficiencies = operationProficiencies;
 	}
 
 	@Override
