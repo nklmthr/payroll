@@ -136,7 +136,7 @@ public class Employee {
 
 	@Transient
 	public String getFullName() {
-		return firstName + " " + middleName + " " + lastName;
+		return lastName + " " + firstName + " " + middleName;
 	}
 
 }

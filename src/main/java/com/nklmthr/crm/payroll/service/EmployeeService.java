@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nklmthr.crm.payroll.dao.EmployeePaymentRepository;
@@ -29,7 +30,7 @@ public class EmployeeService {
 	private EmployeePaymentRepository employeePaymentRepository;
 
 	public List<Employee> getEmployees() {
-		List<Employee> employees = employeeRepository.findAll();
+		List<Employee> employees = employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "lastName"));
 		logger.info("Employees: " + employees.size());
 		return employees;
 	}

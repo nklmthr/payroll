@@ -35,7 +35,7 @@
 						<td
 							th:text="${asg.functionCapability.function.name} +' - '+ ${asg.functionCapability.capability}"></td>
 						<td
-							th:text="${asg.employee.firstName}+', '+${asg.employee.lastName}"></td>
+							th:text="${asg.employee.getFullName()}"></td>
 						<td th:text="${asg.employee.identity}"></td>
 						<td><input type="number" maxlength="3" size="3"
 							th:value="${asg.actualCapabilityAcheivedInPercent}" />%</td>

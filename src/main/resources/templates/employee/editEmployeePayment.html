@@ -47,9 +47,10 @@
 						<td><input name="netSalary" type="text" disabled
 							th:value="*{netSalary}" /></td>
 						<td>Payment Method</td>
-						<td><select name="paymentMode">
-								<option th:each="mode : ${paymentModes}" th:value="${mode}"
-									th:text="${mode}"></option>
+						<td><select name="paymentMode" th:value="*{paymentMode}">
+								<option value="CASH">CASH</option>
+								<option value="BANK">BANK</option>
+								<option value="CHEQUE">CHEQUE</option>
 						</select></td>
 					</tr>
 
