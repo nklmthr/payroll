@@ -8,7 +8,7 @@ cd /home/ec2-user/app/
 java -jar -Dserver.port=8000 MyCRMApp.jar
 
 
-ssh -i /Users/i344377/Downloads/sarla-estate-keypair.pem ec2-user@ec2-user@ec2-3-109-54-110.ap-south-1.compute.amazonaws.com
+ssh -i /Users/i344377/Downloads/sarla-estate-keypair.pem ec2-user@ec2-3-109-54-110.ap-south-1.compute.amazonaws.com
 
 scp -i /Users/i344377/Downloads/sarla-estate-keypair.pem /Users/i344377/SAPDevelop/nklmthr/github/payroll/target/MyCRMApp.jar ec2-user@ec2-3-109-54-110.ap-south-1.compute.amazonaws.com:app
 
@@ -31,6 +31,7 @@ WantedBy=multi-user.target
 _________________________________
 sudo systemctl daemon-reload
 sudo systemctl enable --now my-app
+sudo systemctl start my-app.service
+sudo systemctl stop my-app.service
 sudo systemctl status my-app.service
 
- sudo systemctl status my-app.service
