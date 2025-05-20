@@ -31,8 +31,12 @@ public class Assignment {
 	@Column
 	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);
 
-	@OneToOne(fetch= FetchType.EAGER, mappedBy = "assignment", cascade = CascadeType.ALL)
-    @JoinColumn(name = "employeePayment", referencedColumnName = "id")
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
+	private EmployeeSalary employeeSalary;
+
+	@OneToOne
+	@JoinColumn(name = "employeePayment", referencedColumnName = "id")
 	private EmployeePayment employeePayment;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
@@ -52,7 +56,7 @@ public class Assignment {
 
 	public void update(Assignment assignment) {
 		this.date = assignment.getDate();
-		this.operationProficiency = assignment.getFunctionCapability();
+		this.operationProficiency = assignment.getOperationProficiency();
 		this.workShift = assignment.getWorkShift();
 		this.employee = assignment.getEmployee();
 		this.actualCapabilityAcheivedInPercent = assignment.getActualCapabilityAcheivedInPercent();
@@ -65,6 +69,14 @@ public class Assignment {
 
 	public EmployeePayment getEmployeePayment() {
 		return employeePayment;
+	}
+
+	public EmployeeSalary getEmployeeSalary() {
+		return employeeSalary;
+	}
+
+	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
+		this.employeeSalary = employeeSalary;
 	}
 
 	public void setEmployeePayment(EmployeePayment employeePayment) {
@@ -82,6 +94,7 @@ public class Assignment {
 	public void setWorkShift(WorkShift workShift) {
 		this.workShift = workShift;
 	}
+
 	public Integer getActualCapabilityAcheivedInPercent() {
 		return actualCapabilityAcheivedInPercent;
 	}
@@ -106,14 +119,7 @@ public class Assignment {
 		this.date = date;
 	}
 
-	public OperationProficiency getFunctionCapability() {
-		return operationProficiency;
-	}
-
-	public void setFunctionCapability(OperationProficiency operationProficiency) {
-		this.operationProficiency = operationProficiency;
-	}
-
+	
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -125,6 +131,6 @@ public class Assignment {
 	@Override
 	public String toString() {
 		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
-		return ReflectionToStringBuilder.toString(this);
+		return ReflectionToStringBuilder.toStringExclude(this, "employee", "employeeSalary", "employeePayment");
 	}
 }

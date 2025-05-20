@@ -15,9 +15,9 @@
 	<!-- Main Content -->
 	<div class="main-content">
 		<div class="dashboard-card">
-			<h2>Function Capabilities</h2>
+			<h2>Operation Proficiency</h2>
 			<a
-				th:href="@{/ui/function/function-capability/add (functionId=${param.functionId})}"
+				th:href="@{/ui/operation/operation-proficiency/add (operationId=${param.operationId})}"
 				class="btn green">+ Add</a>
 			<table>
 				<thead>
@@ -30,25 +30,26 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="fcb : ${functionCapabilities}">
+					<tr th:each="fcb : ${operationProficiencies}">
 						<td style="display: none" th:text="${fcb.id}"></td>
 						<td th:text="${fcb.startDate}"></td>
 						<td th:text="${fcb.endDate}"></td>
-						<td th:text="${fcb.function.name}"></td>
+						<td th:text="${fcb.operation.name}"></td>
 						<td th:text="${fcb.capability}"></td>
 						<td class="actions"><a class="btn blue"
-							th:href="@{/ui/function/function-capability/edit (functionId=${fcb.function.id}, functionCapabilityId=${fcb.id})}">Edit</a> <a
-							class="btn red"
-							th:href="@{/ui/function/function-capability/delete (functionId=${fcb.function.id}, functionCapabilityId=${fcb.id})}">Delete</a>
+							th:href="@{/ui/operation/operation-proficiency/edit (operationId=${fcb.operation.id}, operationProficiencyId=${fcb.id})}">Edit</a>
+							<a class="btn red"
+							th:href="@{/ui/operation/operation-proficiency/delete (operationId=${fcb.operation.id}, operationProficiencyId=${fcb.id})}">Delete</a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div align="center"><a class="btn green"
-							th:href="@{/ui/function}">Back</a></div>
+		<div align="center">
+			<a class="btn green" th:href="@{/ui/operation}">Back</a>
+		</div>
 	</div>
-	
+
 
 </body>
 </html>

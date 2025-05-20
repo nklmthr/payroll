@@ -28,7 +28,6 @@ public class EmployeeSalary {
 	@JsonIgnore
 	private Employee employee;
 
-
 	@Column
 	private LocalDate startDate;
 
@@ -88,7 +87,7 @@ public class EmployeeSalary {
 	@Override
 	public String toString() {
 		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
-		return ReflectionToStringBuilder.toStringExclude(this, "employee");
+		return ReflectionToStringBuilder.toStringExclude(this, "employee", "assignment");
 	}
 
 	public void update(EmployeeSalary employeeSalary) {

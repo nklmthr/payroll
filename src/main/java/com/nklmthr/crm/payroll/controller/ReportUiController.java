@@ -27,7 +27,7 @@ public class ReportUiController {
 	public String getReport(Model m) {
 		logger.info("Report page accessed");
 		List<Report> reports = new ArrayList<>();
-		List<Assignment> assignments = assignmentService.getFunctionCapabilityAssignments();
+		List<Assignment> assignments = assignmentService.getAssignments();
 		if (assignments == null || assignments.isEmpty()) {
 			logger.info("No Operation Capability Assignments found");
 			return "report/report";
@@ -35,28 +35,34 @@ public class ReportUiController {
 		Report report = new Report();
 		for (Assignment assignment : assignments) {
 			if (assignment.getDate().isEqual(LocalDate.now())) {
-				report.setFunctionName(assignment.getFunctionCapability().getFunction().getName());
-				report.setCapabilty(assignment.getFunctionCapability().getCapability());
+				report.setOperationName(assignment.getOperationProficiency().getOperation().getName());
+				report.setCapabilty(assignment.getOperationProficiency().getCapability());
 				report.setDate(assignment.getDate());
 				report.setAssignmentCount(report.getAssignmentCount() + 1);
-				report.setTotalSalary(report.getTotalSalary().add(assignment.getEmployee().getEmployeeSalary().stream()
-						.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()).setScale(2));
-				report.setTotalPf(report.getTotalPf().add(assignment.getEmployee().getEmployeeSalary().stream()
-						.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-						.multiply(new java.math.BigDecimal(0.12))).setScale(2, java.math.RoundingMode.HALF_UP));
-				report.setTotalTax(report.getTotalTax().add(assignment.getEmployee().getEmployeeSalary().stream()
-						.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-						.multiply(new java.math.BigDecimal(0.1))).setScale(2, java.math.RoundingMode.HALF_UP));
-				report.setTotalNetSalary(report.getTotalNetSalary().add(assignment.getEmployee().getEmployeeSalary()
-						.stream().filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-						.subtract(assignment.getEmployee().getEmployeeSalary().stream()
-								.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-								.multiply(new java.math.BigDecimal(0.1)))
-						.subtract(assignment.getEmployee().getEmployeeSalary().stream()
-								.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-								.multiply(new java.math.BigDecimal(0.12)))).setScale(2, java.math.RoundingMode.HALF_UP));
-				
-				
+				report.setTotalSalary(
+						report.getTotalSalary()
+								.add(assignment.getEmployee().getEmployeeSalary().stream()
+										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary())
+								.setScale(2));
+				report.setTotalPf(report.getTotalPf()
+						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
+								.findFirst().get().getSalary().multiply(new java.math.BigDecimal(0.12)))
+						.setScale(2, java.math.RoundingMode.HALF_UP));
+				report.setTotalTax(report.getTotalTax()
+						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
+								.findFirst().get().getSalary().multiply(new java.math.BigDecimal(0.1)))
+						.setScale(2, java.math.RoundingMode.HALF_UP));
+				report.setTotalNetSalary(report.getTotalNetSalary()
+						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
+								.findFirst().get().getSalary()
+								.subtract(assignment.getEmployee().getEmployeeSalary().stream()
+										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
+										.multiply(new java.math.BigDecimal(0.1)))
+								.subtract(assignment.getEmployee().getEmployeeSalary().stream()
+										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
+										.multiply(new java.math.BigDecimal(0.12))))
+						.setScale(2, java.math.RoundingMode.HALF_UP));
+
 			}
 		}
 		reports.add(report);

@@ -7,7 +7,7 @@ import com.nklmthr.crm.payroll.dto.Operation;
 
 
 @Repository
-public interface FunctionRepository extends JpaRepository<Operation, String> {
+public interface OperationRepository extends JpaRepository<Operation, String> {
 
 	
 	

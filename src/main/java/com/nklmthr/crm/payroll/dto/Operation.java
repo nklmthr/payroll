@@ -54,11 +54,11 @@ public class Operation {
 		this.name = name;
 	}
 
-	public List<OperationProficiency> getFunctionCapabilities() {
+	public List<OperationProficiency> getOperationProficiencies() {
 		return operationProficiencies;
 	}
 
-	public void setFunctionCapabilities(List<OperationProficiency> operationProficiencies) {
+	public void setOperationProficiencies(List<OperationProficiency> operationProficiencies) {
 		this.operationProficiencies = operationProficiencies;
 	}
 

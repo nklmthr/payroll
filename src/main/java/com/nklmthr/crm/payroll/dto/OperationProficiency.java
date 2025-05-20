@@ -80,14 +80,22 @@ public class OperationProficiency {
 		this.capability = capability;
 	}
 
-	public Operation getFunction() {
+
+	public List<Assignment> getAssignments() {
+		return assignments;
+	}
+
+	public void setAssignments(List<Assignment> assignments) {
+		this.assignments = assignments;
+	}
+
+	public Operation getOperation() {
 		return operation;
 	}
 
-	public void setFunction(Operation operation) {
+	public void setOperation(Operation operation) {
 		this.operation = operation;
 	}
-
 
 	public void update(OperationProficiency operationProficiency) {
 		this.startDate = operationProficiency.getStartDate();

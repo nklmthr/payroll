@@ -26,7 +26,7 @@ public class WebSecurityConfig {
 			authorize.requestMatchers("/css/**", "/js/**", "/images/**", "/h2-console/**").permitAll();
 			authorize.requestMatchers("/ui/login", "/ui/error/**", "/ui/logout", "/ui/home").permitAll();
 			authorize.requestMatchers("/ui/employee/**").hasRole("ADMIN");
-			authorize.requestMatchers("/ui/function/**").hasRole("USER");
+			authorize.requestMatchers("/ui/operation/**").hasRole("USER");
 			authorize.requestMatchers("/ui/assignment/**").hasRole("USER");
 			authorize.requestMatchers("/ui/report/**").hasRole("USER");
 			authorize.anyRequest().authenticated();

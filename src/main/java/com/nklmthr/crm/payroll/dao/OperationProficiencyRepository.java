@@ -3,10 +3,10 @@ package com.nklmthr.crm.payroll.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.nklmthr.crm.payroll.dto.Assignment;
+import com.nklmthr.crm.payroll.dto.OperationProficiency;
 
 
 @Repository
-public interface FunctionCapabilityAssignmentRepository extends JpaRepository<Assignment, String> {
-	
+public interface OperationProficiencyRepository extends JpaRepository<OperationProficiency, String> {
+
 }

@@ -17,19 +17,20 @@
 		<div class="dashboard-card">
 			<h2>Function Capabilities</h2>
 			<form
-				th:action="@{/ui/function/function-capability/update (functionId=${param.functionId}, functionCapabilityId=${param.functionCapabilityId})}"
-				method="post" th:object="${functionCapability}">
+				th:action="@{/ui/operation/operation-proficiency/update (operationId=${param.operationId}, operationProficiencyId=${param.operationProficiencyId})}"
+				method="post" th:object="${operationProficiency}">
 				<table>
 					<tr>
-					
-						<td><label for="startDate">Start Date</label> <input name="startDate"
-							type="date"  th:value="*{startDate}" required /></td>
-						<td><label for="endDate">End Date</label> <input type="date" name="endDate"
-							 th:value="*{endDate}" required /></td>
+
+						<td><label for="startDate">Start Date</label> <input
+							name="startDate" type="date" th:value="*{startDate}" required /></td>
+						<td><label for="endDate">End Date</label> <input type="date"
+							name="endDate" th:value="*{endDate}" required /></td>
 					</tr>
 					<tr>
 						<td colspan="2"><label for="name">Capability Expected</label>
-							<input type="text" name="capability" th:value="*{capability}" required /></td>
+							<input type="text" name="capability" th:value="*{capability}"
+							required /></td>
 					</tr>
 					<tr>
 				</table>
@@ -37,7 +38,7 @@
 				<div class="form-actions">
 					<button type="submit" class="btn green">Save</button>
 					<a class="btn blue"
-							th:href="@{/ui/function/function-capability (functionId=${param.functionId})}">Back</a>
+						th:href="@{/ui/operation/function-capability (operationId=${param.operationId})}">Back</a>
 				</div>
 			</form>
 		</div>

@@ -48,7 +48,7 @@
 					<tr th:each="empPay : ${employeePayments}">
 						<td style="display: none" th:text="${empPay.id}">1</td>
 						<td th:text="${empPay.paymentDate}"></td>
-						<td th:text="${employee.employeeSalary[0].salary}"></td>
+						<td th:text="${empPay.assignment.employeeSalary.salary}"></td>
 						<td
 							th:text="${empPay.assignment.actualCapabilityAcheivedInPercent}">%</td>
 						<td th:text="${empPay.amount}"></td>

@@ -16,8 +16,8 @@
 	<!-- Main Content -->
 	<div class="main-content">
 		<div class="dashboard-card">
-			<h2>Functions</h2>
-			<a th:href="@{/ui/function/add}" class="btn green">+ Add</a>
+			<h2>Operations</h2>
+			<a th:href="@{/ui/operation/add}" class="btn green">+ Add</a>
 			<table>
 				<thead>
 					<tr>
@@ -26,15 +26,15 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="func : ${functions}">
-						<td style="display: none" th:text="${func.id}"></td>
+					<tr th:each="operation : ${operations}">
+						<td style="display: none" th:text="${operation.id}"></td>
 						<td><a
-							th:href="@{/ui/function/function-capability(functionId=${func.id})}"
-							th:text="${func.name}"></a></td>
+							th:href="@{/ui/operation/operation-proficiency(operationId=${operation.id})}"
+							th:text="${operation.name}"></a></td>
 						<td class="actions"><a class="btn blue"
-							th:href="@{/ui/function/edit (functionId=${func.id})}">Edit</a> <a
+							th:href="@{/ui/operation/edit (operationId=${operation.id})}">Edit</a> <a
 							class="btn red"
-							th:href="@{/ui/function/delete (functionId=${func.id})}">Delete</a>
+							th:href="@{/ui/operation/delete (operationId=${operation.id})}">Delete</a>
 						</td>
 					</tr>
 				</tbody>

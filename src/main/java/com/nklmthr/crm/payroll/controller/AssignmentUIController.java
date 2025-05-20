@@ -13,7 +13,7 @@ import com.nklmthr.crm.payroll.dto.Assignment;
 import com.nklmthr.crm.payroll.dto.WorkShift;
 import com.nklmthr.crm.payroll.service.AssignmentService;
 import com.nklmthr.crm.payroll.service.EmployeeService;
-import com.nklmthr.crm.payroll.service.FunctionCapabilityService;
+import com.nklmthr.crm.payroll.service.OperationProficiencyService;
 
 @Controller
 @RequestMapping("/ui")
@@ -28,11 +28,11 @@ public class AssignmentUIController {
 	EmployeeService employeeService;
 
 	@Autowired
-	FunctionCapabilityService functionCapabilityService;
+	OperationProficiencyService operationProficiencyService;
 
 	@GetMapping("/assignment")
 	public String getAssignmentPage(Model m) {
-		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
+		m.addAttribute("assignments", assignmentService.getAssignments());
 		logger.info("Assignment page loaded successfully");
 		return "assignment/assignment";
 	}
@@ -43,7 +43,7 @@ public class AssignmentUIController {
 		assignment.setDate(java.time.LocalDate.now());
 		m.addAttribute("assignment", assignment);
 		m.addAttribute("employees", employeeService.getEmployees());
-		m.addAttribute("functionCapabilities", functionCapabilityService.getAllFunctionCapabilities());
+		m.addAttribute("operationProficiencies", operationProficiencyService.getOperationProficiencies());
 		m.addAttribute("workShifts", WorkShift.values());
 		logger.info("Add Assignment page loaded successfully");
 		return "assignment/addAssignment";
@@ -52,17 +52,17 @@ public class AssignmentUIController {
 	@PostMapping("/assignment/save")
 	public String getSaveAssignmentPage(Model m, Assignment assignment) {
 		logger.info("Saving assignment: " + assignment);
-		assignmentService.saveFunctionCapabilityAssignment(assignment);
+		assignmentService.saveAssignment(assignment);
 		logger.info("Assignment saved successfully");
-		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
+		m.addAttribute("assignments", assignmentService.getAssignments());
 		return "assignment/assignment";
 	}
 
 	@GetMapping("/assignment/edit")
 	public String getEditAssignmentPage(Model m, @RequestParam("assignmentId") String assignmentId) {
-		m.addAttribute("assignment", assignmentService.getFunctionCapabilityAssignment(assignmentId));
+		m.addAttribute("assignment", assignmentService.getAssignment(assignmentId));
 		m.addAttribute("employees", employeeService.getEmployees());
-		m.addAttribute("functionCapabilities", functionCapabilityService.getAllFunctionCapabilities());
+		m.addAttribute("operationProficiencies", operationProficiencyService.getOperationProficiencies());
 		m.addAttribute("workShifts", WorkShift.values());
 		logger.info("Edit Assignment page loaded successfully");
 		return "assignment/editAssignment";
@@ -72,17 +72,17 @@ public class AssignmentUIController {
 	public String getUpdateAssignmentPage(Model m, @RequestParam("assignmentId") String assignmentId,
 			Assignment assignment) {
 		logger.info("Updating assignment: " + assignment);
-		assignmentService.updateFunctionCapabilityAssignment(assignmentId, assignment);
+		assignmentService.updateAssignment(assignmentId, assignment);
 		logger.info("Assignment updated successfully");
-		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
+		m.addAttribute("assignments", assignmentService.getAssignments());
 		return "assignment/assignment";
 	}
 	
 	@GetMapping("/assignment/delete")
 	public String getDeleteAssignmentPage(Model m, @RequestParam("assignmentId") String assignmentId) {
-		assignmentService.deleteFunctionCapabilityAssignment(assignmentId);
+		assignmentService.deleteAssignment(assignmentId);
 		logger.info("Assignment deleted successfully");
-		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
+		m.addAttribute("assignments", assignmentService.getAssignments());
 		return "assignment/assignment";
 	}
 

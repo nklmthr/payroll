@@ -21,7 +21,7 @@
 				<thead>
 					<tr>
 						<th>Date</th>
-						<th>Function</th>
+						<th>Operation Proficiency</th>
 						<th>Employee</th>
 						<th>Identity</th>
 						<th>Capability</th>
@@ -33,7 +33,7 @@
 						<td style="display: none" th:text="${asg.id}"></td>
 						<td th:text="${asg.date}"></td>
 						<td
-							th:text="${asg.functionCapability.function.name} +' - '+ ${asg.functionCapability.capability}"></td>
+							th:text="${asg.operationProficiency.operation.name} +' - '+ ${asg.operationProficiency.capability}"></td>
 						<td
 							th:text="${asg.employee.getFullName()}"></td>
 						<td th:text="${asg.employee.identity}"></td>

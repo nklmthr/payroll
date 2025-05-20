@@ -10,73 +10,82 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
+import com.nklmthr.crm.payroll.dao.AssignmentRepository;
 import com.nklmthr.crm.payroll.dao.EmployeePaymentRepository;
-import com.nklmthr.crm.payroll.dao.FunctionCapabilityAssignmentRepository;
 import com.nklmthr.crm.payroll.dto.Assignment;
 import com.nklmthr.crm.payroll.dto.EmployeePayment;
 import com.nklmthr.crm.payroll.dto.EmployeeSalary;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AssignmentService {
 
 	private static final Logger logger = Logger.getLogger(AssignmentService.class);
 	@Autowired
-	private FunctionCapabilityAssignmentRepository functionCapabilityAssignmentRepository;
+	private AssignmentRepository assignmentRepository;
 
 	@Autowired
 	private EmployeePaymentRepository paymentRepository;
 
-	public List<Assignment> getFunctionCapabilityAssignments() {
+	public List<Assignment> getAssignments() {
 		Order by = new Order(Sort.Direction.DESC, "date");
 		Order by2 = new Order(Sort.Direction.ASC, "employee.lastName");
 		Sort sort = Sort.by(by, by2);
-		List<Assignment> assignments = functionCapabilityAssignmentRepository.findAll(sort);
+		List<Assignment> assignments = assignmentRepository.findAll(sort);
 		if (!assignments.isEmpty()) {
-			logger.info("Operation Capability Assignments: " + assignments.size());
+			logger.info("Operation Proficiency Assignments: " + assignments.size());
 			return assignments;
 		}
-		logger.info("No Operation Capability Assignments found");
+		logger.info("No Operation Proficiency Assignments found");
 		return null;
 	}
 
-	public Assignment getFunctionCapabilityAssignment(String id) {
-		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository.findById(id);
-		if (functionCapabilityAssignmentOpt.isPresent()) {
-			logger.info("Operation Capability Assignment found with ID: " + id);
-			return functionCapabilityAssignmentOpt.get();
+	public Assignment getAssignment(String assignmentId) {
+		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
+		if (assignmentOpt.isPresent()) {
+			logger.info("Operation Proficiency Assignment found with ID: " + assignmentId);
+			return assignmentOpt.get();
 		}
-		logger.info("No Operation Capability Assignment found with ID: " + id);
+		logger.info("No Operation Proficiency Assignment found with ID: " + assignmentId);
 		return null;
 	}
 
-	public Assignment saveFunctionCapabilityAssignment(Assignment assignment) {
-		Assignment asg = functionCapabilityAssignmentRepository.save(assignment);
-		EmployeeSalary salary = asg.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
+	@Transactional
+	public Assignment saveAssignment(Assignment assignment) {
+		Assignment asg = assignmentRepository.save(assignment);
+		assignmentRepository.flush();
+		Assignment assignment1 = assignmentRepository.findById(asg.getId()).get();
+		EmployeeSalary salary = assignment1.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
 				.findFirst().get();
 		EmployeePayment payment = new EmployeePayment();
-		doRegulatoryDeductions(asg, payment, salary);
+		doRegulatoryDeductions(assignment1, payment, salary);
+		assignment1.setEmployeeSalary(salary);
+		assignment1.setEmployeePayment(payment);
+		payment.setAssignment(assignment1);
 		paymentRepository.save(payment);
+		assignmentRepository.save(assignment1);
 		return asg;
 
 	}
 
-	public Assignment updateFunctionCapabilityAssignment(String assignmentId, Assignment assignment) {
-		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
-				.findById(assignmentId);
-		if (functionCapabilityAssignmentOpt.isPresent()) {
-			Assignment functionCapabilityAssignment1 = functionCapabilityAssignmentOpt.get();
-			Optional<EmployeeSalary> empSalary = functionCapabilityAssignment1.getEmployee().getEmployeeSalary()
-					.stream().filter(s -> (s.getEndDate() == null)).findFirst();
+	@Transactional
+	public Assignment updateAssignment(String assignmentId, Assignment assignment) {
+		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
+		if (assignmentOpt.isPresent()) {
+			Assignment assignment1 = assignmentOpt.get();
+			Optional<EmployeeSalary> empSalary = assignment1.getEmployee().getEmployeeSalary().stream()
+					.filter(s -> (s.getEndDate() == null)).findFirst();
 			if (empSalary.isPresent()) {
 				EmployeeSalary salary = empSalary.get();
-
-				functionCapabilityAssignment1.update(assignment);
-				EmployeePayment payment = functionCapabilityAssignment1.getEmployeePayment();
-				payment = doRegulatoryDeductions(functionCapabilityAssignment1, payment, salary);
-				functionCapabilityAssignment1.setEmployeePayment(payment);
+				assignment1.update(assignment);
+				assignment1.setEmployeeSalary(salary);
+				EmployeePayment payment = assignment1.getEmployeePayment();
+				payment = doRegulatoryDeductions(assignment1, payment, salary);
+				assignment1.setEmployeePayment(payment);
 				paymentRepository.save(payment);
-				functionCapabilityAssignmentRepository.save(functionCapabilityAssignment1);
-				return functionCapabilityAssignment1;
+				assignmentRepository.save(assignment1);
+				return assignment1;
 			}
 		}
 		return null;
@@ -86,6 +95,7 @@ public class AssignmentService {
 			EmployeeSalary salary) {
 		payment.setEmployee(salary.getEmployee());
 		payment.setAssignment(assignment);
+		assignment.setEmployeeSalary(salary);
 		payment.setAmount(salary.getSalary().multiply(
 				new BigDecimal(assignment.getActualCapabilityAcheivedInPercent()).divide(new BigDecimal(100))));
 		payment.setPaymentDate(assignment.getDate());
@@ -97,14 +107,13 @@ public class AssignmentService {
 		return payment;
 	}
 
-	public void deleteFunctionCapabilityAssignment(String assignmentId) {
-		Optional<Assignment> functionCapabilityAssignmentOpt = functionCapabilityAssignmentRepository
-				.findById(assignmentId);
-		if (functionCapabilityAssignmentOpt.isPresent()) {
-			functionCapabilityAssignmentRepository.delete(functionCapabilityAssignmentOpt.get());
-			logger.info("Operation Capability Assignment deleted with ID: " + assignmentId);
+	public void deleteAssignment(String assignmentId) {
+		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
+		if (assignmentOpt.isPresent()) {
+			assignmentRepository.delete(assignmentOpt.get());
+			logger.info("Operation Proficiency Assignment deleted with ID: " + assignmentId);
 		} else {
-			logger.info("No Operation Capability Assignment found with ID: " + assignmentId);
+			logger.info("No Operation Proficiency Assignment found with ID: " + assignmentId);
 		}
 	}
 }

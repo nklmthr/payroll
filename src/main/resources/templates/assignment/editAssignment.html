@@ -36,10 +36,10 @@
 									th:text="${emp.firstName}+', '+${emp.lastName}"></option>
 						</select></td>
 						<td><label>Function Capability</label></td>
-						<td><select th:field="*{functionCapability}" disabled>
-								<option th:each="functionCapability : ${functionCapabilities}"
-									th:value="${functionCapability.id}"
-									th:text="${functionCapability.function.name}+' - '+${functionCapability.capability}"></option>
+						<td><select th:field="*{operationProficiency}" disabled>
+								<option th:each="operationProficiency : ${operationProficiencies}"
+									th:value="${operationProficiency.id}"
+									th:text="${operationProficiency.operation.name}+' - '+${operationProficiency.capability}"></option>
 						</select></td>
 					</tr>
 					<tr>

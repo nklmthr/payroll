@@ -113,11 +113,11 @@ public class Employee {
 		this.employeePayments = employeePayments;
 	}
 
-	public List<Assignment> getFunctionCapabilityAssignments() {
+	public List<Assignment> getßAssignments() {
 		return assignments;
 	}
 
-	public void setFunctionCapabilityAssignments(List<Assignment> assignments) {
+	public void setAssignments(List<Assignment> assignments) {
 		this.assignments = assignments;
 	}
 
