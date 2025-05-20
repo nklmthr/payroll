@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -84,8 +84,8 @@ public class EmployeeSalary {
 
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-		return gson.toJson(this);
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toStringExclude(this, "employee");
 	}
 
 	public void update(EmployeeSalary employeeSalary) {

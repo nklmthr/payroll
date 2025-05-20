@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nklmthr.crm.payroll.dto.Employee;
+import com.nklmthr.crm.payroll.dto.EmployeePayment;
 import com.nklmthr.crm.payroll.dto.EmployeeSalary;
 import com.nklmthr.crm.payroll.service.EmployeeService;
 
@@ -40,6 +41,7 @@ public class EmployeeUIController {
 
 	@PostMapping("/employee/save")
 	public String saveEmployee(Model m, Employee employee) {
+		logger.info("Saving employee: " + employee);
 		employeeService.saveEmployee(employee);
 		m.addAttribute("employees", employeeService.getEmployees());
 		logger.info("Employee saved successfully");
@@ -56,6 +58,7 @@ public class EmployeeUIController {
 
 	@PostMapping("/employee/update")
 	public String updateEmployee(Model m, @RequestParam("employeeId") String employeeId, Employee employee) {
+		logger.info("Updating employee: " + employee);
 		employeeService.updateEmployee(employeeId, employee);
 		logger.info("Employee updated successfully");
 		m.addAttribute("employees", employeeService.getEmployees());
@@ -65,7 +68,7 @@ public class EmployeeUIController {
 	@GetMapping("/employee/delete")
 	public String deleteEmployee(Model m, @RequestParam("employeeId") String employeeId) {
 		employeeService.deleteEmployee(employeeId);
-		logger.info("Employee deleted successfully");
+		logger.info("Employee deleted successfully"+employeeId);
 		m.addAttribute("employees", employeeService.getEmployees());
 		return "employee/employee";
 	}
@@ -74,6 +77,7 @@ public class EmployeeUIController {
 	public String getEmployeeSalaries(Model m, @RequestParam("employeeId") String employeeId) {
 		m.addAttribute("employeeSalaries", employeeService.getEmployeeSalaries(employeeId));
 		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		logger.info("Employee Salary list fetched successfully");
 		return "employee/employeeSalary";
 	}
 
@@ -83,12 +87,15 @@ public class EmployeeUIController {
 		employeeSalary.setStartDate(LocalDate.now().withDayOfMonth(1));
 		m.addAttribute("employeeSalary", employeeSalary);
 		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		logger.info("Employee Salary object created");
 		return "employee/addEmployeeSalary";
 	}
 
 	@PostMapping("/employee/salary/save")
 	public String saveEmployeeSalary(Model m, @RequestParam("employeeId") String employeeId,
 			EmployeeSalary employeeSalary) {
+		logger.info("Saving employee salary: " + employeeSalary);
+		
 		employeeService.saveEmployeeSalary(employeeId, employeeSalary);
 		logger.info("Employee Salary saved successfully");
 		m.addAttribute("employeeSalaries", employeeService.getEmployeeSalaries(employeeId));
@@ -118,6 +125,7 @@ public class EmployeeUIController {
 	@PostMapping("/employee/salary/update")
 	public String updateEmployeeSalary(Model m, @RequestParam("employeeId") String employeeId,
 			@RequestParam("employeeSalaryId") String employeeSalaryId, EmployeeSalary employeeSalary) {
+		logger.info("Updating employee salary: " + employeeSalary);
 		employeeService.updateEmployeeSalary(employeeId, employeeSalaryId, employeeSalary);
 		logger.info("Employee Salary updated successfully");
 		m.addAttribute("employeeSalaries", employeeService.getEmployeeSalaries(employeeId));
@@ -129,10 +137,81 @@ public class EmployeeUIController {
 	public String deleteEmployeeSalary(Model m, @RequestParam("employeeId") String employeeId,
 			@RequestParam("employeeSalaryId") String employeeSalaryId) {
 		employeeService.deleteEmployeeSalary(employeeId, employeeSalaryId);
-		logger.info("Employee Salary deleted successfully");
+		logger.info("Employee Salary deleted successfully"+employeeSalaryId);
 		m.addAttribute("employeeSalaries", employeeService.getEmployeeSalaries(employeeId));
 		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
 		return "employee/employeeSalary";
+	}
+	
+	@GetMapping("/employee/payment")
+	public String getEmployeePayments(Model m, @RequestParam("employeeId") String employeeId) {
+		m.addAttribute("employeePayments", employeeService.getEmployeePayments(employeeId));
+		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		logger.info("Employee Payment list fetched successfully");
+		return "employee/employeePayment";
+	}
+	
+	@GetMapping("/employee/payment/add")
+	public String addEmployeePaymentPage(Model m, @RequestParam("employeeId") String employeeId) {
+		EmployeePayment employeePayment = new EmployeePayment();
+		employeePayment.setPaymentDate(LocalDate.now());
+		m.addAttribute("employeePayment", employeePayment);
+		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		logger.info("Employee Payment object created");
+		return "employee/addEmployeePayment";
+	}
+	
+	@PostMapping("/employee/payment/save")
+	public String saveEmployeePayment(Model m, @RequestParam("employeeId") String employeeId,
+			EmployeePayment employeePayment) {
+		logger.info("Saving employee payment: " + employeePayment);
+		employeeService.updateRegulatoryDeductions(employeePayment);
+		employeeService.saveEmployeePayment(employeeId, employeePayment);
+		logger.info("Employee Payment saved successfully");
+		m.addAttribute("employeePayments", employeeService.getEmployeePayments(employeeId));
+		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		return "employee/employeePayment";
+	}
+	
+	@GetMapping("/employee/payment/edit")
+	public String editEmployeePayment(Model m, @RequestParam("employeeId") String employeeId,
+			@RequestParam("employeePaymentId") String employeePaymentId) {
+		Optional<EmployeePayment> employeePayOpt = employeeService.getEmployeePayments(employeeId).stream()
+				.filter(payment -> payment.getId().equals(employeePaymentId)).findFirst();
+		if (employeePayOpt.isPresent()) {
+			EmployeePayment employeePayment = employeePayOpt.get();
+			m.addAttribute("employeePayment", employeePayment);
+			m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+			logger.info("Employee Payment fetched successfully");
+		} else {
+			logger.error(
+					"Employee Payment not found for Employee ID: " + employeeId + " and Payment ID: " + employeePaymentId);
+			return "error";
+		}
+
+		return "employee/editEmployeePayment";
+	}
+	
+	@PostMapping("/employee/payment/update")
+	public String updateEmployeePayment(Model m, @RequestParam("employeeId") String employeeId,
+			@RequestParam("employeePaymentId") String employeePaymentId, EmployeePayment employeePayment) {
+		logger.info("Updating employee payment: " + employeePayment);
+		employeeService.updateRegulatoryDeductions(employeePayment);
+		employeeService.updateEmployeePayment(employeeId, employeePaymentId, employeePayment);
+		logger.info("Employee Payment updated successfully");
+		m.addAttribute("employeePayments", employeeService.getEmployeePayments(employeeId));
+		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		return "employee/employeePayment";
+	}
+	
+	@GetMapping("/employee/payment/delete")
+	public String deleteEmployeePayment(Model m, @RequestParam("employeeId") String employeeId,
+			@RequestParam("employeePaymentId") String employeePaymentId) {
+		employeeService.deleteEmployeePayment(employeeId, employeePaymentId);
+		logger.info("Employee Payment deleted successfully"+employeePaymentId);
+		m.addAttribute("employeePayments", employeeService.getEmployeePayments(employeeId));
+		m.addAttribute("employee", employeeService.getEmployeesById(employeeId));
+		return "employee/employeePayment";
 	}
 
 }

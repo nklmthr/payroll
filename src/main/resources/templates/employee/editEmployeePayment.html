@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Employee Compensation</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+	<div th:replace="~{top :: top}"></div>
+
+	<div th:replace="~{sidebar :: sidebar}"></div>
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="dashboard-card">
+			<h2>Edit Payments</h2>
+			<h3 th:text="${employee.getFullName()}"></h3>
+			<form
+				th:action="@{/ui/employee/payment/update (employeeId=${param.employeeId}, employeePaymentId=${param.employeePaymentId})}"
+				method="post" th:object="${employeePayment}">
+				<table>
+					<tr>
+						<td>Start Date</td>
+						<td><input name="paymentDate" type="date"
+							th:value="*{paymentDate}" required /></td>
+						<td>Amount</td>
+						<td><input name="amount" type="text" th:value="*{amount}" /></td>
+						<td>Tax</td>
+						<td><input name="tax" type="text" th:value="*{tax}" disabled /></td>
+					</tr>
+					<tr>
+						<td>PF Employee</td>
+						<td><input name="pfEmployee" type="text" disabled
+							th:value="*{pfEmployee}" /></td>
+						<td>PF Employer</td>
+						<td><input name="pfEmployer" type="text" disabled
+							th:value="*{pfEmployer}" /></td>
+						<td>Total PF</td>
+						<td><input name="totalPf" type="text" th:value="*{totalPf}"
+							disabled /></td>
+					</tr>
+					<tr>
+						<td>Net Salary</td>
+						<td><input name="netSalary" type="text" disabled
+							th:value="*{netSalary}" /></td>
+						<td>Payment Method</td>
+						<td><select name="paymentMode">
+								<option th:each="mode : ${paymentModes}" th:value="${mode}"
+									th:text="${mode}"></option>
+						</select></td>
+					</tr>
+
+				</table>
+
+				<div class="form-actions">
+					<button type="submit" class="btn green">Save</button>
+					<a class="btn blue"
+						th:href="@{/ui/employee/payment (employeeId=${param.employeeId})}">Back</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

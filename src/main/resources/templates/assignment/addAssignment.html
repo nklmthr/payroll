@@ -24,7 +24,7 @@
 						<td>Date</td>
 						<td><input type="date" name="date" th:value="*{date}" /></td>
 						<td>WorkShift</td>
-						<td th:field="*{workShift}"><select><option
+						<td><select th:field="*{workShift}"><option
 									th:each="workShift : ${workShifts}"
 									th:value="${workShift.name}" th:text="${workShift.name}"></option>
 						</select></td>

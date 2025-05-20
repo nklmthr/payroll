@@ -1,5 +1,7 @@
 package com.nklmthr.crm.payroll.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,9 +9,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nklmthr.crm.payroll.dao.EmployeePaymentRepository;
 import com.nklmthr.crm.payroll.dao.EmployeeRepository;
 import com.nklmthr.crm.payroll.dao.EmployeeSalaryRepository;
 import com.nklmthr.crm.payroll.dto.Employee;
+import com.nklmthr.crm.payroll.dto.EmployeePayment;
 import com.nklmthr.crm.payroll.dto.EmployeeSalary;
 
 @Service
@@ -20,6 +24,9 @@ public class EmployeeService {
 	private EmployeeRepository employeeRepository;
 	@Autowired
 	private EmployeeSalaryRepository employeeSalaryRepository;
+
+	@Autowired
+	private EmployeePaymentRepository employeePaymentRepository;
 
 	public List<Employee> getEmployees() {
 		List<Employee> employees = employeeRepository.findAll();
@@ -35,7 +42,7 @@ public class EmployeeService {
 	public Employee getEmployeesById(String employeeId) {
 		Optional<Employee> employee = employeeRepository.findById(employeeId);
 		if (employee.isPresent()) {
-			logger.info("Employee found: " + employee.get());
+			logger.info("Employee found: " + employee.get().getId());
 			return employee.get();
 		}
 		return null;
@@ -81,8 +88,9 @@ public class EmployeeService {
 		}
 		return null;
 	}
-	
-	public EmployeeSalary updateEmployeeSalary(String employeeId, String employeeSalaryId, EmployeeSalary employeeSalary) {
+
+	public EmployeeSalary updateEmployeeSalary(String employeeId, String employeeSalaryId,
+			EmployeeSalary employeeSalary) {
 		Optional<Employee> employee = employeeRepository.findById(employeeId);
 		if (employee.isPresent()) {
 			Optional<EmployeeSalary> empSal = employeeSalaryRepository.findById(employeeSalaryId);
@@ -98,7 +106,7 @@ public class EmployeeService {
 		}
 		return null;
 	}
-	
+
 	public void deleteEmployeeSalary(String employeeId, String employeeSalaryId) {
 		Optional<Employee> employee = employeeRepository.findById(employeeId);
 		if (employee.isPresent()) {
@@ -108,6 +116,70 @@ public class EmployeeService {
 				employeeSalaryRepository.delete(empSal.get());
 			}
 		}
+	}
+
+	public List<EmployeePayment> getEmployeePayments(String employeeId) {
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			List<EmployeePayment> employeePayments = employee.get().getEmployeePayments();
+			logger.info("Employee payments found: " + employeePayments.size());
+			return employeePayments;
+		}
+		return null;
+	}
+
+	public void saveEmployeePayment(String employeeId, EmployeePayment employeePayment) {
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			Employee emp = employee.get();
+			employeePayment.setEmployee(emp);
+			emp.getEmployeePayments().add(employeePayment);
+			logger.info("Saving employee payment: " + employeePayment.getId());
+			employeePaymentRepository.save(employeePayment);
+		}
+	}
+
+	public void updateEmployeePayment(String employeeId, String employeePaymentId, EmployeePayment employeePayment) {
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			Optional<EmployeePayment> empPay = employeePaymentRepository.findById(employeePaymentId);
+			if (empPay.isPresent()) {
+				Employee emp = employee.get();
+				EmployeePayment empPay1 = empPay.get();
+				empPay1.update(employeePayment);
+				empPay1.setEmployee(emp);
+				logger.info("Updating employee payment: " + empPay1.getId());
+				employeePaymentRepository.save(empPay1);
+			}
+		}
+	}
+
+	public void deleteEmployeePayment(String employeeId, String employeePaymentId) {
+		Optional<Employee> employee = employeeRepository.findById(employeeId);
+		if (employee.isPresent()) {
+			Optional<EmployeePayment> empPay = employeePaymentRepository.findById(employeePaymentId);
+			if (empPay.isPresent()) {
+				logger.info("Deleting employee payment: " + empPay.get().getId());
+				employeePaymentRepository.delete(empPay.get());
+			}
+		}
+	}
+
+	public void updateRegulatoryDeductions(EmployeePayment employeePayment) {
+		// TODO Auto-generated method stub
+		logger.info("Updating regulatory deductions for employee salary: " + employeePayment.getId());
+		employeePayment.setPfEmployee(
+				employeePayment.getAmount().multiply(new BigDecimal(0.12)).setScale(2, RoundingMode.HALF_UP));
+		employeePayment.setPfEmployer(
+				employeePayment.getAmount().multiply(new BigDecimal(0.12)).setScale(2, RoundingMode.HALF_UP));
+		employeePayment.setTotalPf(
+				employeePayment.getPfEmployee().add(employeePayment.getPfEmployer()).setScale(2, RoundingMode.HALF_UP));
+		employeePayment
+				.setTax(employeePayment.getAmount().multiply(new BigDecimal(0.1)).setScale(2, RoundingMode.HALF_UP));
+		employeePayment.setNetSalary(employeePayment.getAmount().subtract(employeePayment.getTax())
+				.subtract(employeePayment.getTotalPf()).setScale(2, RoundingMode.HALF_UP));
+		logger.info("Regulatory deductions updated for employee salary: " + employeePayment.getId());
+
 	}
 
 }

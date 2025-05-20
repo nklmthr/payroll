@@ -1,6 +1,8 @@
 package com.nklmthr.crm.payroll.dto;
 
-import com.google.gson.Gson;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -97,7 +99,8 @@ public class AppUser {
 		this.roles = roles;
 	}
 	public String toString() {
-		return new Gson().toJson(this);
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toString(this);
 	}
 
 }

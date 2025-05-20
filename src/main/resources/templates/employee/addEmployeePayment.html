@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Employee Compensation</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+	<div th:replace="~{top :: top}"></div>
+
+	<div th:replace="~{sidebar :: sidebar}"></div>
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="dashboard-card">
+			<h2>Add New Payment</h2>
+			<h3 th:text="${employee.getFullName()}"></h3>
+			<form
+				th:action="@{/ui/employee/payment/save (employeeId=${param.employeeId})}"
+				method="post" th:object="${employeePayment}">
+				<table>
+					<tr>
+						<td>Payment Date</td>
+						<td><input type="date" name="paymentDate"
+							th:value="*{paymentDate}" /></td>
+						<td>Payment Amount</td>
+						<td><input type="number" name="amount"
+							th:value="*{amount}" /></td>
+						<td>Tax</td>
+						<td><input type="number" name="tax" th:value="*{tax}" disabled /></td>
+					</tr>
+					<tr>
+
+						<td>Employee PF</td>
+						<td><input type="number" name="pfEmployee" disabled
+							th:value="*{pfEmployee}" /></td>
+						<td>Employer PF</td>
+						<td><input type="number" name="pfEmployer" disabled
+							th:value="*{pfEmployer}" /></td>
+						<td>Total PF</td>
+						<td><input type="number" name="totalPf" th:value="*{totalPf}" disabled/></td>
+					</tr>
+					<tr>
+						<td>Net Salary</td>
+						<td><input type="number" name="netSalary" disabled
+							th:value="*{netSalary}" /></td>
+						<td>Payment Mode</td>
+						<td><select name="paymentMode" th:value="*{paymentMode}">
+								<option value="CASH">CASH</option>
+								<option value="BANK">BANK</option>
+								<option value="CHEQUE">CHEQUE</option>
+						</select></td>
+					</tr>
+
+				</table>
+
+				<div class="form-actions">
+					<button type="submit" class="btn green">Save</button>
+					<a class="btn blue"
+						th:href="@{/ui/employee/payment (employeeId=${param.employeeId})}">Back</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

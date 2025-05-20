@@ -3,8 +3,8 @@ package com.nklmthr.crm.payroll.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -103,7 +103,7 @@ public class Assignment {
 
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-		return gson.toJson(this);
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

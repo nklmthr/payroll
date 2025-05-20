@@ -3,6 +3,9 @@ package com.nklmthr.crm.payroll.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class Report {
 	private String functionName;
 	private String capabilty;
@@ -68,7 +71,10 @@ public class Report {
 	public void setTotalNetSalary(BigDecimal totalNetSalary) {
 		this.totalNetSalary = totalNetSalary;
 	}
-	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
 	
 	
 }

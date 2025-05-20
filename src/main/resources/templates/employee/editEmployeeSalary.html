@@ -21,7 +21,7 @@
 				th:text="${employee.firstName} + ' '+ ${employee.middleName} +' ' + ${employee.lastName}">
 			</h3>
 			<form
-				th:action="@{/ui/employee/salary/update (employeeId=${param.employeeId}, employeeSalaryId=${employeeSalary.id})}"
+				th:action="@{/ui/employee/salary/update (employeeId=${param.employeeId}, employeeSalaryId=${param.employeeSalaryId})}"
 				method="post" th:object="${employeeSalary}">
 				<table>
 					<tr>

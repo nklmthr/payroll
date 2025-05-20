@@ -33,6 +33,7 @@ public class AssignmentUIController {
 	@GetMapping("/assignment")
 	public String getAssignmentPage(Model m) {
 		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
+		logger.info("Assignment page loaded successfully");
 		return "assignment/assignment";
 	}
 
@@ -44,11 +45,13 @@ public class AssignmentUIController {
 		m.addAttribute("employees", employeeService.getEmployees());
 		m.addAttribute("functionCapabilities", functionCapabilityService.getAllFunctionCapabilities());
 		m.addAttribute("workShifts", WorkShift.values());
+		logger.info("Add Assignment page loaded successfully");
 		return "assignment/addAssignment";
 	}
 
 	@PostMapping("/assignment/save")
 	public String getSaveAssignmentPage(Model m, Assignment assignment) {
+		logger.info("Saving assignment: " + assignment);
 		assignmentService.saveFunctionCapabilityAssignment(assignment);
 		logger.info("Assignment saved successfully");
 		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());
@@ -61,12 +64,14 @@ public class AssignmentUIController {
 		m.addAttribute("employees", employeeService.getEmployees());
 		m.addAttribute("functionCapabilities", functionCapabilityService.getAllFunctionCapabilities());
 		m.addAttribute("workShifts", WorkShift.values());
+		logger.info("Edit Assignment page loaded successfully");
 		return "assignment/editAssignment";
 	}
 
 	@PostMapping("/assignment/update")
 	public String getUpdateAssignmentPage(Model m, @RequestParam("assignmentId") String assignmentId,
 			Assignment assignment) {
+		logger.info("Updating assignment: " + assignment);
 		assignmentService.updateFunctionCapabilityAssignment(assignmentId, assignment);
 		logger.info("Assignment updated successfully");
 		m.addAttribute("assignments", assignmentService.getFunctionCapabilityAssignments());

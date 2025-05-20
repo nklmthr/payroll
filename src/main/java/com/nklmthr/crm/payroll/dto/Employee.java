@@ -3,8 +3,8 @@ package com.nklmthr.crm.payroll.dto;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,13 +43,13 @@ public class Employee {
 
 	@OneToMany(mappedBy = "employee")
 	private List<EmployeeSalary> employeeSalary;
-	
+
 	@OneToMany(mappedBy = "employee")
 	private List<EmployeePayment> employeePayments;
 
 	@OneToMany(mappedBy = "employee")
 	private List<Assignment> assignments;
-	
+
 	@PrePersist
 	protected void generateIdIfMissing() {
 		if (this.id == null) {
@@ -130,8 +130,8 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-		return gson.toJson(this);
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toStringExclude(this, "assignments");
 	}
 
 	@Transient

@@ -2,8 +2,10 @@ package com.nklmthr.crm.payroll.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,7 +13,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -52,7 +53,21 @@ public class EmployeePayment {
 	
 	@Column
 	private BigDecimal netSalary;
+	
+	@Column
+	private String paymentMode;
 
+	public void update(EmployeePayment employeePayment) {
+		this.paymentDate = employeePayment.getPaymentDate();
+		this.amount = employeePayment.getAmount();
+		this.tax = employeePayment.getTax();
+		this.pfEmployee = employeePayment.getPfEmployee();
+		this.pfEmployer = employeePayment.getPfEmployer();
+		this.totalPf = employeePayment.getTotalPf();
+		this.netSalary = employeePayment.getNetSalary();	
+		this.paymentMode = employeePayment.getPaymentMode();
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -67,6 +82,14 @@ public class EmployeePayment {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
 	public LocalDate getPaymentDate() {
@@ -124,6 +147,13 @@ public class EmployeePayment {
 	public void setNetSalary(BigDecimal netSalary) {
 		this.netSalary = netSalary;
 	}
+	
+	@Override
+	public String toString() {
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toStringExclude(this, "employee");
+	}
+
 	
 	
 	

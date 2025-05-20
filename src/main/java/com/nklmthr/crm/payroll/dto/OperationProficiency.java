@@ -1,10 +1,13 @@
 package com.nklmthr.crm.payroll.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -28,6 +32,10 @@ public class OperationProficiency {
 
 	@Column
 	private String capability;
+	
+	@OneToMany(mappedBy = "operationProficiency")
+	@JsonIgnore
+	private List<Assignment> assignments;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "Operation", referencedColumnName = "id")
@@ -90,8 +98,8 @@ public class OperationProficiency {
 
 	@Override
 	public String toString() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-		return gson.toJson(this);
+		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
+		return ReflectionToStringBuilder.toStringExclude(this, "operation", "assignments");
 	}
 
 }
