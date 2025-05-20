@@ -10,9 +10,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -20,40 +22,43 @@ public class EmployeePayment {
 
 	@Id
 	private String id;
-	
+
 	@PrePersist
 	protected void generateIdIfMissing() {
 		if (this.id == null) {
 			this.id = UUID.randomUUID().toString();
 		}
 	}
-	
+
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "employee", referencedColumnName = "id")
 	private Employee employee;
-	
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "assignment")
+	private Assignment assignment;
+
 	@Column
 	private LocalDate paymentDate;
-	
+
 	@Column
 	private BigDecimal amount;
-	
+
 	@Column
 	private BigDecimal tax;
-	
+
 	@Column
 	private BigDecimal pfEmployee;
-	
+
 	@Column
 	private BigDecimal pfEmployer;
-	
+
 	@Column
 	private BigDecimal totalPf;
-	
+
 	@Column
 	private BigDecimal netSalary;
-	
+
 	@Column
 	private String paymentMode;
 
@@ -64,10 +69,18 @@ public class EmployeePayment {
 		this.pfEmployee = employeePayment.getPfEmployee();
 		this.pfEmployer = employeePayment.getPfEmployer();
 		this.totalPf = employeePayment.getTotalPf();
-		this.netSalary = employeePayment.getNetSalary();	
+		this.netSalary = employeePayment.getNetSalary();
 		this.paymentMode = employeePayment.getPaymentMode();
 	}
-	
+
+	public Assignment getAssignment() {
+		return assignment;
+	}
+
+	public void setAssignment(Assignment assignment) {
+		this.assignment = assignment;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -147,14 +160,11 @@ public class EmployeePayment {
 	public void setNetSalary(BigDecimal netSalary) {
 		this.netSalary = netSalary;
 	}
-	
+
 	@Override
 	public String toString() {
 		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
 		return ReflectionToStringBuilder.toStringExclude(this, "employee");
 	}
 
-	
-	
-	
 }

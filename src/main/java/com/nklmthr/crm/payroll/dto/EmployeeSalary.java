@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +25,7 @@ public class EmployeeSalary {
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "employee", referencedColumnName = "id")
+	@JsonIgnore
 	private Employee employee;
 
 

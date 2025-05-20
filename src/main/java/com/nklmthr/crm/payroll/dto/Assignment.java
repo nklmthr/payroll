@@ -9,9 +9,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 
 @Entity
@@ -29,13 +31,9 @@ public class Assignment {
 	@Column
 	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);
 
-	public WorkShift getWorkShift() {
-		return workShift;
-	}
-
-	public void setWorkShift(WorkShift workShift) {
-		this.workShift = workShift;
-	}
+	@OneToOne(fetch= FetchType.EAGER, mappedBy = "assignment", cascade = CascadeType.ALL)
+    @JoinColumn(name = "employeePayment", referencedColumnName = "id")
+	private EmployeePayment employeePayment;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "OperationProficiency", referencedColumnName = "id")
@@ -61,6 +59,29 @@ public class Assignment {
 
 	}
 
+	public WorkShift getWorkShift() {
+		return workShift;
+	}
+
+	public EmployeePayment getEmployeePayment() {
+		return employeePayment;
+	}
+
+	public void setEmployeePayment(EmployeePayment employeePayment) {
+		this.employeePayment = employeePayment;
+	}
+
+	public OperationProficiency getOperationProficiency() {
+		return operationProficiency;
+	}
+
+	public void setOperationProficiency(OperationProficiency operationProficiency) {
+		this.operationProficiency = operationProficiency;
+	}
+
+	public void setWorkShift(WorkShift workShift) {
+		this.workShift = workShift;
+	}
 	public Integer getActualCapabilityAcheivedInPercent() {
 		return actualCapabilityAcheivedInPercent;
 	}

@@ -32,6 +32,8 @@
 				<thead>
 					<tr>
 						<th>Payment Date</th>
+						<th>Salary</th>
+						<th>Proficiency</th>
 						<th>Amount</th>
 						<th>Tax</th>
 						<th>PF Employee</th>
@@ -46,6 +48,9 @@
 					<tr th:each="empPay : ${employeePayments}">
 						<td style="display: none" th:text="${empPay.id}">1</td>
 						<td th:text="${empPay.paymentDate}"></td>
+						<td th:text="${employee.employeeSalary[0].salary}"></td>
+						<td
+							th:text="${empPay.assignment.actualCapabilityAcheivedInPercent}">%</td>
 						<td th:text="${empPay.amount}"></td>
 						<td th:text="${empPay.tax}"></td>
 						<td th:text="${empPay.pfEmployee}"></td>
