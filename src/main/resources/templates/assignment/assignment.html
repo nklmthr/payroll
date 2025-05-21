@@ -23,25 +23,21 @@
 						<th>Date</th>
 						<th>Operation Proficiency</th>
 						<th>Employee</th>
-						<th>Identity</th>
-						<th>Capability</th>
-						<th>Actions</th>
+						<th>Prof</th>
+						<th>Edit</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="asg : ${assignments}">
-						<td style="display: none" th:text="${asg.id}"></td>
 						<td th:text="${asg.date}"></td>
 						<td
 							th:text="${asg.operationProficiency.operation.name} +' - '+ ${asg.operationProficiency.capability}"></td>
-						<td
-							th:text="${asg.employee.getFullName()}"></td>
-						<td th:text="${asg.employee.identity}"></td>
-						<td><input type="number" maxlength="3" size="3"
-							th:value="${asg.actualCapabilityAcheivedInPercent}" />%</td>
+						<td th:text="${asg.employee.getFullName()}+'['+${asg.employee.identity}+']'"></td>
+						<td th:text="${asg.actualCapabilityAcheivedInPercent}+'%'"></td>
 						<td class="actions"><a class="btn blue"
-							th:href="@{/ui/assignment/edit (assignmentId=${asg.id})}">Edit</a> <a
-							class="btn red"
+							th:href="@{/ui/assignment/edit (assignmentId=${asg.id})}">Edit</a></td>
+						<td><a class="btn red"
 							th:href="@{/ui/assignment/delete (assignmentId=${asg.id})}">Delete</a>
 						</td>
 					</tr>
