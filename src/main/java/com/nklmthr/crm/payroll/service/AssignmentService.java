@@ -79,10 +79,12 @@ public class AssignmentService {
 			if (empSalary.isPresent()) {
 				EmployeeSalary salary = empSalary.get();
 				assignment1.update(assignment);
-				assignment1.setEmployeeSalary(salary);
+				
 				EmployeePayment payment = assignment1.getEmployeePayment();
 				payment = doRegulatoryDeductions(assignment1, payment, salary);
+				assignment1.setEmployeeSalary(salary);
 				assignment1.setEmployeePayment(payment);
+				payment.setAssignment(assignment1);
 				paymentRepository.save(payment);
 				assignmentRepository.save(assignment1);
 				return assignment1;
@@ -107,9 +109,12 @@ public class AssignmentService {
 		return payment;
 	}
 
+	@Transactional
 	public void deleteAssignment(String assignmentId) {
 		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
 		if (assignmentOpt.isPresent()) {
+			EmployeePayment payment = assignmentOpt.get().getEmployeePayment();
+			paymentRepository.delete(payment);
 			assignmentRepository.delete(assignmentOpt.get());
 			logger.info("Operation Proficiency Assignment deleted with ID: " + assignmentId);
 		} else {
