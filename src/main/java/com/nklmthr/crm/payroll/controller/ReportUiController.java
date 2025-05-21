@@ -1,7 +1,5 @@
 package com.nklmthr.crm.payroll.controller;
 
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.nklmthr.crm.payroll.dto.Assignment;
+import com.nklmthr.crm.payroll.dto.EmployeePayment;
 import com.nklmthr.crm.payroll.dto.Report;
-import com.nklmthr.crm.payroll.service.AssignmentService;
+import com.nklmthr.crm.payroll.service.EmployeeService;
 
 @Controller
 @RequestMapping("/ui")
@@ -22,35 +20,50 @@ public class ReportUiController {
 	private static final Logger logger = Logger.getLogger(ReportUiController.class);
 
 	@Autowired
-	AssignmentService assignmentService;
+	EmployeeService employeeService;
 
 	@RequestMapping("/report")
 	public String getReport(Model m) {
 		logger.info("Report page accessed");
 		List<Report> reports = new ArrayList<>();
-		List<Assignment> assignments = assignmentService.getAssignments();
-		if (assignments == null || assignments.isEmpty()) {
-			logger.info("No Operation Capability Assignments found");
-			return "report/report";
-		}
-		Report report = new Report();
-		for (Assignment assignment : assignments) {
-			if (assignment.getDate().isEqual(LocalDate.now())) {
-				report.setOperationName(assignment.getOperationProficiency().getOperation().getName());
-				report.setCapabilty(assignment.getOperationProficiency().getCapability());
-				report.setDate(assignment.getDate());
+		List<EmployeePayment> empPayments = employeeService.getEmployeePayments();
+
+		for (EmployeePayment empPayment : empPayments) {
+			if (empPayment.getAssignment() == null) {
+				Report report = reports.stream().filter(s -> s.getOperationName().equals("Assignment deleted"))
+						.findFirst().orElse(null);
+				logger.info("Assignment deleted: " + empPayment.getAssignment());
+				logger.info(reports);
+				logger.info("Report: " + report);
+				if (report == null) {
+					report = new Report();
+					report.setOperationName("Assignment deleted");
+				}
+				report.setCapabilty("Assignment deleted");
+				report.setDate(empPayment.getPaymentDate());
 				report.setAssignmentCount(report.getAssignmentCount() + 1);
-				report.setTotalSalary(report.getTotalSalary().add(assignment.getEmployeePayment().getAmount())
-						.setScale(2, java.math.RoundingMode.HALF_UP));
-				report.setTotalPf(report.getTotalPf().add(assignment.getEmployeePayment().getTotalPf()).setScale(2,
-						RoundingMode.HALF_UP));
-				report.setTotalTax(report.getTotalTax().add(assignment.getEmployeePayment().getTax()).setScale(2,
-						RoundingMode.HALF_UP));
-				report.setTotalNetSalary(report.getTotalNetSalary().add(assignment.getEmployeePayment().getNetSalary())
-						.setScale(2, RoundingMode.HALF_UP));
+				report.setGrossSalary(report.getGrossSalary().add(empPayment.getAmount()));
+				report.setTotalPf(report.getTotalPf().add(empPayment.getTotalPf()));
+				report.setTotalTax(report.getTotalTax().add(empPayment.getTax()));
+				report.setNetSalary(report.getNetSalary().add(empPayment.getNetSalary()));
+				reports.add(report);
+
+			} else {
+				Report report = new Report();
+				report.setDate(empPayment.getPaymentDate());
+				report.setOperationName(empPayment.getAssignment().getOperationProficiency().getOperation().getName());
+				report.setCapabilty(empPayment.getAssignment().getOperationProficiency().getCapability());
+				report.setDate(empPayment.getPaymentDate());
+				report.setAssignmentCount(report.getAssignmentCount() + 1);
+				report.setGrossSalary(report.getGrossSalary().add(empPayment.getAmount()));
+				report.setTotalPf(report.getTotalPf().add(empPayment.getTotalPf()));
+				report.setTotalTax(report.getTotalTax().add(empPayment.getTax()));
+				report.setNetSalary(report.getNetSalary().add(empPayment.getNetSalary()));
+				reports.add(report);
 			}
+
 		}
-		reports.add(report);
+
 		m.addAttribute("reports", reports);
 		return "report/report";
 	}

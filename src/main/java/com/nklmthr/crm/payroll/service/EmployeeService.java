@@ -119,6 +119,16 @@ public class EmployeeService {
 		}
 	}
 
+	/*
+	 * Needed for Reports to calculate totals
+	 */
+	public List<EmployeePayment> getEmployeePayments() {
+		List<EmployeePayment> employeePayments = employeePaymentRepository
+				.findAll(Sort.by(Sort.Direction.ASC, "paymentDate"));
+		logger.info("Employee payments: " + employeePayments.size());
+		return employeePayments;
+	}
+
 	public List<EmployeePayment> getEmployeePayments(String employeeId) {
 		Optional<Employee> employee = employeeRepository.findById(employeeId);
 		if (employee.isPresent()) {

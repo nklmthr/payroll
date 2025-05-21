@@ -34,9 +34,12 @@ public class EmployeePayment {
 	@JoinColumn(name = "employee", referencedColumnName = "id")
 	private Employee employee;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "assignment")
+	@OneToOne(mappedBy ="employeePayment")
 	private Assignment assignment;
+
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
+	private EmployeeSalary employeeSalary;
 
 	@Column
 	private LocalDate paymentDate;
@@ -71,6 +74,14 @@ public class EmployeePayment {
 		this.totalPf = employeePayment.getTotalPf();
 		this.netSalary = employeePayment.getNetSalary();
 		this.paymentMode = employeePayment.getPaymentMode();
+	}
+
+	public EmployeeSalary getEmployeeSalary() {
+		return employeeSalary;
+	}
+
+	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
+		this.employeeSalary = employeeSalary;
 	}
 
 	public Assignment getAssignment() {

@@ -32,25 +32,34 @@
 				<thead>
 					<tr>
 						<th>Payment Date</th>
+						<th>Operation</th>
+						<th>Fulfillment</th>
 						<th>Salary</th>
-						<th>Proficiency</th>
-						<th>Amount</th>
+						<th>Gross</th>
 						<th>Tax</th>
-						<th>PF Employee</th>
-						<th>PF Employer</th>
-						<th>Total PF</th>
-						<th>Net Salary</th>
+						<th>PF Org</th>
+						<th>PF Self</th>
+						<th>PF</th>
+						<th>Net</th>
 						<th>Payment Method</th>
-						<th>Actions</th>
+						<th>Edit</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="empPay : ${employeePayments}">
 						<td style="display: none" th:text="${empPay.id}">1</td>
 						<td th:text="${empPay.paymentDate}"></td>
-						<td th:text="${empPay.assignment.employeeSalary.salary}"></td>
-						<td
+						<td th:if="${empPay.assignment != null}"
+							th:text="${empPay.assignment.operationProficiency.operation.name}+' - '+${empPay.assignment.operationProficiency.capability}"></td>
+						<td th:unless="${empPay.assignment != null}">Assignment
+							Deleted</td>
+						<td th:if="${empPay.assignment != null}"
 							th:text="${empPay.assignment.actualCapabilityAcheivedInPercent}">%</td>
+						<td th:unless="${empPay.assignment != null}">Assignment
+							Deleted</td>
+						<td th:text="${empPay.employeeSalary.salary}"></td>
+
 						<td th:text="${empPay.amount}"></td>
 						<td th:text="${empPay.tax}"></td>
 						<td th:text="${empPay.pfEmployee}"></td>
@@ -60,7 +69,8 @@
 						<td th:text="${empPay.paymentMode}"></td>
 						<td class="actions"><a
 							th:href="@{/ui/employee/payment/edit (employeeId=${empPay.employee.id}, employeePaymentId=${empPay.id})}"
-							class="btn blue">Edit</a> <a
+							class="btn blue">Edit</a></td>
+						<td><a
 							th:href="@{/ui/employee/payment/delete (employeeId=${empPay.employee.id}, employeePaymentId=${empPay.id})}"
 							class="btn red">Delete</a></td>
 					</tr>

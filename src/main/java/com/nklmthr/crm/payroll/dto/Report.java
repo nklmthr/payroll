@@ -11,11 +11,10 @@ public class Report {
 	private String capabilty;
 	private LocalDate date;
 	private Integer assignmentCount = Integer.valueOf(0);
-	private Integer averageActualCapabilityAcheivedInPercent;
-	private BigDecimal totalSalary = BigDecimal.ZERO;
+	private BigDecimal grossSalary = BigDecimal.ZERO;
 	private BigDecimal totalPf = BigDecimal.ZERO;
 	private BigDecimal totalTax = BigDecimal.ZERO;
-	private BigDecimal totalNetSalary = BigDecimal.ZERO;
+	private BigDecimal netSalary = BigDecimal.ZERO;
 
 	public String getOperationName() {
 		return operationName;
@@ -49,20 +48,12 @@ public class Report {
 		this.assignmentCount = assignmentCount;
 	}
 
-	public Integer getAverageActualCapabilityAcheivedInPercent() {
-		return averageActualCapabilityAcheivedInPercent;
+	public BigDecimal getGrossSalary() {
+		return grossSalary;
 	}
 
-	public void setAverageActualCapabilityAcheivedInPercent(Integer averageActualCapabilityAcheivedInPercent) {
-		this.averageActualCapabilityAcheivedInPercent = averageActualCapabilityAcheivedInPercent;
-	}
-
-	public BigDecimal getTotalSalary() {
-		return totalSalary;
-	}
-
-	public void setTotalSalary(BigDecimal totalSalary) {
-		this.totalSalary = totalSalary;
+	public void setGrossSalary(BigDecimal grossSalary) {
+		this.grossSalary = grossSalary;
 	}
 
 	public BigDecimal getTotalPf() {
@@ -81,12 +72,12 @@ public class Report {
 		this.totalTax = totalTax;
 	}
 
-	public BigDecimal getTotalNetSalary() {
-		return totalNetSalary;
+	public BigDecimal getNetSalary() {
+		return netSalary;
 	}
 
-	public void setTotalNetSalary(BigDecimal totalNetSalary) {
-		this.totalNetSalary = totalNetSalary;
+	public void setNetSalary(BigDecimal netSalary) {
+		this.netSalary = netSalary;
 	}
 
 	@Override

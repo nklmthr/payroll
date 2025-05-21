@@ -11,7 +11,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -31,27 +30,21 @@ public class Assignment {
 	@Column
 	private WorkShift workShift;
 	
-	
-
 	@Column
 	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "employeeSalary", referencedColumnName = "id")
-	private EmployeeSalary employeeSalary;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "OperationProficiency", referencedColumnName = "id")
+	private OperationProficiency operationProficiency;
+
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "Employee", referencedColumnName = "id")
+	private Employee employee;
 
 	@OneToOne
 	@JoinColumn(name = "employeePayment", referencedColumnName = "id")
 	private EmployeePayment employeePayment;
-
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "OperationProficiency", referencedColumnName = "id")
-	private OperationProficiency operationProficiency;
-
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "Employee", referencedColumnName = "id")
-	private Employee employee;
-
+	
 	@PrePersist
 	protected void generateIdIfMissing() {
 		if (this.id == null) {
@@ -61,11 +54,8 @@ public class Assignment {
 
 	public void update(Assignment assignment) {
 		this.date = assignment.getDate();
-		this.operationProficiency = assignment.getOperationProficiency();
 		this.workShift = assignment.getWorkShift();
-		this.employee = assignment.getEmployee();
 		this.actualCapabilityAcheivedInPercent = assignment.getActualCapabilityAcheivedInPercent();
-
 	}
 
 	public WorkShift getWorkShift() {
@@ -74,14 +64,6 @@ public class Assignment {
 
 	public EmployeePayment getEmployeePayment() {
 		return employeePayment;
-	}
-
-	public EmployeeSalary getEmployeeSalary() {
-		return employeeSalary;
-	}
-
-	public void setEmployeeSalary(EmployeeSalary employeeSalary) {
-		this.employeeSalary = employeeSalary;
 	}
 
 	public void setEmployeePayment(EmployeePayment employeePayment) {
@@ -136,6 +118,6 @@ public class Assignment {
 	@Override
 	public String toString() {
 		ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.JSON_STYLE);
-		return ReflectionToStringBuilder.toStringExclude(this, "employee", "employeeSalary", "employeePayment");
+		return ReflectionToStringBuilder.toStringExclude(this, "employee", "operationProficiency", "employeePayment");
 	}
 }

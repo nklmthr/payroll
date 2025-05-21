@@ -55,16 +55,21 @@ public class AssignmentService {
 	public Assignment saveAssignment(Assignment assignment) {
 		Assignment asg = assignmentRepository.save(assignment);
 		Assignment assignment1 = assignmentRepository.findById(asg.getId()).get();
-		EmployeeSalary salary = assignment1.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
-				.findFirst().get();
-		EmployeePayment payment = new EmployeePayment();
-		doRegulatoryDeductions(assignment1, payment, salary);
-		assignment1.setEmployeeSalary(salary);
-		assignment1.setEmployeePayment(payment);
-		payment.setAssignment(assignment1);
-		paymentRepository.save(payment);
-		assignmentRepository.save(assignment1);
-		return asg;
+		Optional<EmployeeSalary> salOpt = assignment1.getEmployee().getEmployeeSalary().stream()
+				.filter(s -> (s.getEndDate() == null)).findFirst();
+		if (salOpt.isPresent()) {
+			EmployeeSalary salary = salOpt.get();
+			EmployeePayment payment = doRegulatoryDeductions(assignment1);
+			payment.setEmployeeSalary(salary);
+			payment.setAssignment(assignment1);
+			payment.setEmployee(assignment1.getEmployee());
+			assignment1.setEmployeePayment(payment);
+			paymentRepository.save(payment);
+			assignmentRepository.save(assignment1);
+			return asg;
+		}
+		logger.info("No Employee Salary found for assignment: " + assignment.getId());
+		return null;
 
 	}
 
@@ -73,51 +78,51 @@ public class AssignmentService {
 		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
 		if (assignmentOpt.isPresent()) {
 			Assignment assignment1 = assignmentOpt.get();
-			Optional<EmployeeSalary> empSalary = assignment1.getEmployee().getEmployeeSalary().stream()
-					.filter(s -> (s.getEndDate() == null)).findFirst();
-			if (empSalary.isPresent()) {
-				EmployeeSalary salary = empSalary.get();
-				assignment1.update(assignment);
-				
-				EmployeePayment payment = assignment1.getEmployeePayment();
-				payment = doRegulatoryDeductions(assignment1, payment, salary);
-				assignment1.setEmployeeSalary(salary);
-				assignment1.setEmployeePayment(payment);
+			assignment1.update(assignment);
+			EmployeePayment payment = doRegulatoryDeductions(assignment1);
+			if (payment != null) {
 				payment.setAssignment(assignment1);
 				paymentRepository.save(payment);
+				assignment1.setEmployeePayment(payment);
 				assignmentRepository.save(assignment1);
 				return assignment1;
 			}
+
 		}
 		return null;
 	}
 
-	private EmployeePayment doRegulatoryDeductions(Assignment assignment, EmployeePayment payment,
-			EmployeeSalary salary) {
-		payment.setEmployee(salary.getEmployee());
-		payment.setAssignment(assignment);
-		assignment.setEmployeeSalary(salary);
-		payment.setAmount(salary.getSalary().multiply(
-				new BigDecimal(assignment.getActualCapabilityAcheivedInPercent()).divide(new BigDecimal(100))));
-		payment.setPaymentDate(assignment.getDate());
-		payment.setPfEmployee(payment.getAmount().multiply(new java.math.BigDecimal(0.12)));
-		payment.setPfEmployer(payment.getAmount().multiply(new java.math.BigDecimal(0.12)));
-		payment.setTax(payment.getAmount().multiply(new java.math.BigDecimal(0.1)));
-		payment.setTotalPf(payment.getPfEmployee().add(payment.getPfEmployer()));
-		payment.setNetSalary(payment.getAmount().subtract(payment.getTax()).subtract(payment.getTotalPf()));
-		return payment;
+	private EmployeePayment doRegulatoryDeductions(Assignment assignment) {
+		Optional<EmployeeSalary> empSalary = assignment.getEmployee().getEmployeeSalary().stream()
+				.filter(s -> (s.getEndDate() == null)).findFirst();
+		if (empSalary.isPresent()) {
+			EmployeeSalary salary = empSalary.get();
+			EmployeePayment payment = new EmployeePayment();
+			payment.setAssignment(assignment);
+			payment.setEmployee(assignment.getEmployee());
+			payment.setAmount(salary.getSalary().multiply(
+					new BigDecimal(assignment.getActualCapabilityAcheivedInPercent()).divide(new BigDecimal(100))));
+			payment.setPaymentDate(assignment.getDate());
+			payment.setPfEmployee(payment.getAmount().multiply(new java.math.BigDecimal(0.12)));
+			payment.setPfEmployer(payment.getAmount().multiply(new java.math.BigDecimal(0.12)));
+			payment.setTax(payment.getAmount().multiply(new java.math.BigDecimal(0.1)));
+			payment.setTotalPf(payment.getPfEmployee().add(payment.getPfEmployer()));
+			payment.setNetSalary(payment.getAmount().subtract(payment.getTax()).subtract(payment.getTotalPf()));
+			return payment;
+		}
+		return null;
 	}
 
 	@Transactional
 	public void deleteAssignment(String assignmentId) {
 		Optional<Assignment> assignmentOpt = assignmentRepository.findById(assignmentId);
 		if (assignmentOpt.isPresent()) {
-			EmployeePayment payment = assignmentOpt.get().getEmployeePayment();
-			paymentRepository.delete(payment);
-			assignmentRepository.delete(assignmentOpt.get());
-			logger.info("Operation Proficiency Assignment deleted with ID: " + assignmentId);
+			Assignment assignment = assignmentOpt.get();
+			assignment.setEmployeePayment(null);
+			assignmentRepository.delete(assignment);
+			logger.info("Assignment deleted with ID: " + assignmentId);
 		} else {
-			logger.info("No Operation Proficiency Assignment found with ID: " + assignmentId);
+			logger.info("No Assignment found with ID: " + assignmentId);
 		}
 	}
 }

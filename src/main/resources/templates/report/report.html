@@ -22,25 +22,23 @@
 				<thead>
 					<tr>
 						<th>Date</th>
-						<th>Function</th>
-						<th>Capability</th>
+						<th>Proficiency</th>
 						<th>Count</th>
-						<th>Total Amount</th>
-						<th>Total PF</th>
-						<th>Total Tax</th>
-						<th>Total Net Salary</th>
+						<th>Gross Salary</th>
+						<th>PF</th>
+						<th>Tax</th>
+						<th>Net Salary</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="report : ${reports}">
 						<td th:text="${report.date}"></td>
-						<td th:text="${report.operationName}"></td>
-						<td th:text="${report.capabilty}"></td>
+						<td th:text="${report.operationName}+' - '+${report.capabilty}"></td>
 						<td th:text="${report.assignmentCount}"></td>
-						<td th:text="${report.totalSalary}"></td>
+						<td th:text="${report.grossSalary}"></td>
 						<td th:text="${report.totalPf}"></td>
 						<td th:text="${report.totalTax}"></td>
-						<td th:text="${report.totalNetSalary}"></td>
+						<td th:text="${report.netSalary}"></td>
 					</tr>
 				</tbody>
 			</table>
