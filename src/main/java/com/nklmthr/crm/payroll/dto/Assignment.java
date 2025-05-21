@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -25,8 +27,11 @@ public class Assignment {
 	@Column
 	private LocalDate date;
 
+	@Enumerated(EnumType.STRING)
 	@Column
 	private WorkShift workShift;
+	
+	
 
 	@Column
 	private Integer actualCapabilityAcheivedInPercent = Integer.valueOf(0);

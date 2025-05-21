@@ -1,5 +1,6 @@
 package com.nklmthr.crm.payroll.controller;
 
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,30 +40,14 @@ public class ReportUiController {
 				report.setCapabilty(assignment.getOperationProficiency().getCapability());
 				report.setDate(assignment.getDate());
 				report.setAssignmentCount(report.getAssignmentCount() + 1);
-				report.setTotalSalary(
-						report.getTotalSalary()
-								.add(assignment.getEmployee().getEmployeeSalary().stream()
-										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary())
-								.setScale(2));
-				report.setTotalPf(report.getTotalPf()
-						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
-								.findFirst().get().getSalary().multiply(new java.math.BigDecimal(0.12)))
+				report.setTotalSalary(report.getTotalSalary().add(assignment.getEmployeePayment().getAmount())
 						.setScale(2, java.math.RoundingMode.HALF_UP));
-				report.setTotalTax(report.getTotalTax()
-						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
-								.findFirst().get().getSalary().multiply(new java.math.BigDecimal(0.1)))
-						.setScale(2, java.math.RoundingMode.HALF_UP));
-				report.setTotalNetSalary(report.getTotalNetSalary()
-						.add(assignment.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
-								.findFirst().get().getSalary()
-								.subtract(assignment.getEmployee().getEmployeeSalary().stream()
-										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-										.multiply(new java.math.BigDecimal(0.1)))
-								.subtract(assignment.getEmployee().getEmployeeSalary().stream()
-										.filter(s -> (s.getEndDate() == null)).findFirst().get().getSalary()
-										.multiply(new java.math.BigDecimal(0.12))))
-						.setScale(2, java.math.RoundingMode.HALF_UP));
-
+				report.setTotalPf(report.getTotalPf().add(assignment.getEmployeePayment().getTotalPf()).setScale(2,
+						RoundingMode.HALF_UP));
+				report.setTotalTax(report.getTotalTax().add(assignment.getEmployeePayment().getTax()).setScale(2,
+						RoundingMode.HALF_UP));
+				report.setTotalNetSalary(report.getTotalNetSalary().add(assignment.getEmployeePayment().getNetSalary())
+						.setScale(2, RoundingMode.HALF_UP));
 			}
 		}
 		reports.add(report);

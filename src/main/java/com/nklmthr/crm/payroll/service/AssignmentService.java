@@ -54,7 +54,6 @@ public class AssignmentService {
 	@Transactional
 	public Assignment saveAssignment(Assignment assignment) {
 		Assignment asg = assignmentRepository.save(assignment);
-		assignmentRepository.flush();
 		Assignment assignment1 = assignmentRepository.findById(asg.getId()).get();
 		EmployeeSalary salary = assignment1.getEmployee().getEmployeeSalary().stream().filter(s -> (s.getEndDate() == null))
 				.findFirst().get();
