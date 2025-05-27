@@ -24,6 +24,7 @@
 						<th>Date</th>
 						<th>Proficiency</th>
 						<th>Count</th>
+						<th>Gross w/o Oper. Capab.</th>
 						<th>Gross Salary</th>
 						<th>PF</th>
 						<th>Tax</th>
@@ -33,8 +34,9 @@
 				<tbody>
 					<tr th:each="report : ${reports}">
 						<td th:text="${report.date}"></td>
-						<td th:text="${report.operationName}+' - '+${report.capabilty}"></td>
+						<td th:text="${report.operationCapability}"></td>
 						<td th:text="${report.assignmentCount}"></td>
+						<td th:text="${report.salaryWithOutOperationCapabilityBalance}"></td>
 						<td th:text="${report.grossSalary}"></td>
 						<td th:text="${report.totalPf}"></td>
 						<td th:text="${report.totalTax}"></td>

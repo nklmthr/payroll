@@ -98,6 +98,7 @@ public class AssignmentService {
 		if (empSalary.isPresent()) {
 			EmployeeSalary salary = empSalary.get();
 			EmployeePayment payment = new EmployeePayment();
+			payment.setEmployeeSalary(salary);
 			payment.setAssignment(assignment);
 			payment.setEmployee(assignment.getEmployee());
 			payment.setAmount(salary.getSalary().multiply(
